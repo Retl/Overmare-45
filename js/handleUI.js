@@ -15,8 +15,6 @@ function handle_btn_newPony()
 	selectedSettlement.addResident(test);
 	test = new Unit();
 	selectedUnit = test;
-	selectedUnit.setRandomSpecial(5,5,5,5,5,5,5);
-	selectedUnit.setLevel(1);
 	handle_btn_ng();
 	selectedSettlement.addResident(test);
 	handle_btn_examine();

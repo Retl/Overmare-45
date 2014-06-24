@@ -103,4 +103,4 @@ var reportPassFail = function (f)
 	else {console.log("Failed.");}
 };
 
-runTests();
+//runTests();

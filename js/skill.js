@@ -71,6 +71,13 @@ var Skill = function (theBase, theName)
 	};
 	
 	//Return an instance.
-	console.log(this);
+	//console.log(this);
 	return this;
+};
+
+Skill.compareSkills = function (a, b) 
+{
+	//Used for sorting. Subtracts B from A and returns the result. 
+	//Array sort would interpret a positive result as A being > B, and sort A later in the array than B.	
+	return a.getTotal() - b.getTotal();
 };

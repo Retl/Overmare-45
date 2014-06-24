@@ -75,6 +75,8 @@ var Unit = function () {
 	
 	this.skillList = [this.barter, this.battleSaddles, this.explosives, this.lockpick, this.mew, this.medicine, this.melee, 
 						this.mechanics, this.science, this.firearms, this.sneak, this.speech, this.survival, this.unarmed];
+						
+	this.prefSkills; //This is an array of the skills (by reference) that the character has an affinity for. Typically, this will be the skills their SPECIAL marked highest. - Moore.
 	
 	//These stats depend less on character growth, and more on scenario.
 	this.currentWeight;
@@ -179,6 +181,16 @@ var Unit = function () {
 		this.unarmed.setBase((this.endurance * 2) + Math.floor(this.luck / 2));
 	};
 	
+	this.autoPrefSkills = function () 
+	{
+		//Make a copy of the skill list, so as to not change how it is displayed.
+		this.prefSkills = this.skillList.slice(); //Slice makes a shallow copy. Assignment makes them refer to the same object by reference.
+		//Sort the skill list by lowest to highest.
+		//Take the 4 largest values from the sorted skill list as the preferred skills.
+		this.prefSkills = this.prefSkills.sort(Skill.compareSkills).slice(-4);
+		return this.prefSkills;
+	};
+	
 	this.setLevel = function (newLevel)
 	{
 		if (newLevel < 1) {newLevel = 1;}
@@ -229,7 +241,7 @@ var Unit = function () {
 		if (this.food < 0) {this.food = 0;}
 		if (this.sleep < 0) {this.sleep = 0;}
 		
-		if (this.hasSkillPoints(10)) {this.autoApplySkillpoints(10);}
+		if (this.hasSkillPoints(2)) {this.autoApplySkillpoints(2);}
 		
 	};
 	
@@ -378,10 +390,43 @@ var Unit = function () {
 		if (this.hasSkillPoints(numPoints))
 		{
 			var which = 0;
+			
+			var usePrefs = false;
+			var skillTarget = 90;
+			
 			var added = false;
 			
-			which = Utilities.RandomInArray(this.skillList);
-			added = this.skillList[which].addRank(numPoints);
+			//Check to see if the prefskills are all over a minimum amount.
+			for (i in this.prefSkills)
+			{
+				var pts = this.prefSkills[i].getTotal();
+				if (Utilities.IsNumber(pts))
+				{
+					if (pts < skillTarget) {usePrefs = true;}
+				}
+				
+			}
+			
+			//If they aren't, put the points into prefskills. Otherwise, put the points wherever available.
+			if (usePrefs)
+			{
+				which = Utilities.RandomInArray(this.prefSkills); //This just gets the index. We need to find the corresponding element index in the skill list.
+				//console.log(this.prefSkills[which].myName + " Should = ");
+				which = this.skillList.indexOf(this.prefSkills[which]);
+				//console.log(this.skillList[which].myName);
+				
+			}
+			
+			else
+			{
+				which = Utilities.RandomInArray(this.skillList);
+			}
+			
+			if (!this.skillList[which].isMaxed())
+			{
+				added = this.skillList[which].addRank(numPoints);
+			}
+			
 			
 			//Move to the next iteration and reset values. - Moore
 			if (added) {this.skillpoints -= numPoints;}
@@ -426,6 +471,10 @@ var Unit = function () {
 		return result;
 	};
 	
+	//Final setup before returning...
+	this.setRandomSpecial(5,5,5,5,5,5,5);
+	this.setLevel(1);
+	this.autoPrefSkills();
 	//Return an instance.
 	//console.log(this);
 	return this;
