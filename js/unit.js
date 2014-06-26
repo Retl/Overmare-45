@@ -435,6 +435,17 @@ var Unit = function () {
 		}
 	};
 	
+		
+	this.addPerk = function (thePerk) 
+	{
+		//Stub - Moore.
+	};
+	
+	this.removePerk = function (thePerk) 
+	{
+		//Stub - Moore.
+	};
+	
 	this.ToString = function ()
 	{
 		result ="";
