@@ -446,44 +446,6 @@ var Unit = function () {
 		//Stub - Moore.
 	};
 	
-	/*
-	this.reviver = function (theObject)
-	{
-		for (prop in theObject) 
-		{
-			console.log("This has "+ prop +": "+ this.hasOwnProperty(prop) +" Other has "+ prop +": " + theObject.hasOwnProperty(prop))
-			if (theObject.hasOwnProperty(prop) && theObject.hasOwnProperty(prop))
-			{
-				this.prop = theObject.prop;
-			}
-		}
-	};
-	*/
-	
-	this.reviver = function (prop, val)
-	{
-		var result;
-		console.log(prop);
-		if (prop == "Skill")
-		{
-			result = val; //If it's a skill, you should create a new skill object.
-		}
-		else if (prop == "") //The end of the chain- the 'propertiesObject' with all the other stuff in it.
-		{
-			result = new Unit();
-			result.myName = val.myName;
-			//result[prop] = val[prop];
-			result.setSpecial(val.strength,val.perception,val.endurance,val.charisma,val.intelligence,val.agility,val.luck)
-			//selectedSettlement.addResident(test);
-		}
-		else
-		{
-			result = val; //Return all other properties without transforming them. - Moore.
-		}
-		
-		return result;
-	};
-	
 	this.ToString = function ()
 	{
 		result ="";
@@ -528,3 +490,33 @@ var Unit = function () {
 	//console.log(this);
 	return this;
 };
+
+Unit.reviver = function (prop, val)
+	{
+		var result;
+		console.log(prop);
+		if (prop == "barter" || prop == "battleSaddles" || prop == "explosives" || prop == "lockpick" || 
+			prop == "mew" || prop == "medicine" || prop == "melee" || prop == "mechanics" || 
+			prop == "science" || prop == "firearms" || prop == "sneak" || prop == "speech" || 
+			prop == "unarmed")
+		{
+			result = new Skill(val.base, val.myName); //If it's a skill, you should create a new skill object. - Moore.
+			result.setTag(val.tag);
+			result.addRank(val.ranks);
+			result.misc = val.misc;
+		}
+		else if (prop == "") //The end of the chain- the 'propertiesObject' with all the other stuff in it.
+		{
+			result = new Unit();
+			result.myName = val.myName;
+			//result[prop] = val[prop];
+			result.setSpecial(val.strength,val.perception,val.endurance,val.charisma,val.intelligence,val.agility,val.luck)
+			//selectedSettlement.addResident(test);
+		}
+		else
+		{
+			result = val; //Return all other properties without transforming them. - Moore.
+		}
+		
+		return result;
+	};
