@@ -136,3 +136,64 @@ function handle_btn_namesplus()
 {
 	Namer.howManyNames++;
 }
+
+//START OF: Save/Load Handlers
+function handle_btn_save()
+{
+	//Cycle through all current data, convert to JSON String, and save it in a cookie.
+	//var save;
+	save = JSON.stringify(selectedSettlement);
+	return save;
+}
+
+function handle_btn_load()
+{
+	//Overwrite current data with the save data from the cookie.
+	var loaded = null;
+	//Only do it if there is save data present.
+	if (typeof save != "undefined")
+	{
+		loaded = JSON.parse(save, Settlement.reviver);
+	}
+	
+	selectedSettlement = loaded;
+	return loaded;
+}
+
+function handle_btn_save_export()
+{
+	//Only do it if there is save data present.
+	if (typeof save != "undefined")
+	{
+		var um = Utilities.copyToClipboard(save);
+		console.log(um.length + " " + save.length);
+		console.log(um == save);
+	}
+	else
+	{
+		Window.alert("Save data not found.");
+	}
+}
+
+function handle_btn_save_import()
+{
+	//STUB.
+	var input = window.prompt("Paste Save Data: Ctrl+V, Enter", "");
+	//Only do it if there is save data present.
+	if (input != "" && input != null)
+	{
+		save = input;
+	}
+	else
+	{
+		alert("No data. Did you forget to Paste? (Ctrl+V)");
+	}
+	
+	return save;
+}
+
+function handle_btn_delete_save()
+{
+	//Delete the save data.
+}
+//END OF: Save/Load Handlers

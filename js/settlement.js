@@ -48,6 +48,11 @@ var Settlement = function ()
 		return residents.slice();
 	};
 	
+	this.setResidents = function (newRes)
+	{
+		residents = newRes; //Careful not to accdidentally use 'this' here. It's a private variable. - Moore.
+	};
+	
 	this.hourly = function ()
 	{
 		//Behaviour that should be done for every hour that passes. - Moore.
@@ -56,29 +61,6 @@ var Settlement = function ()
 			residents[i].hourly();
 		}
 		
-	};
-	
-	
-	/*
-	this.toJSON = function ()
-	{
-		var result = "";
-		result += "{";
-		result += JSON.stringify(this.getName());
-		result += JSON.stringify(this.getResidents());
-		result += "}";
-		return result;
-	};
-	*/
-	
-	this.toJSON = function ()
-	{
-		var result = {};
-		result.myName = this.myName;
-		result.residents = this.getResidents();
-		//result += JSON.stringify(this.getName());
-		//result += JSON.stringify(this.getResidents());
-		return result;
 	};
 	
 	this.ToString = function ()
@@ -95,5 +77,45 @@ var Settlement = function ()
 	{
 		Utilities.WriteNoLine(" - LOCATION: " + selectedSettlement.myName + ".");
 	};
+};
+
+Settlement.prototype.toJSON = function ()
+{
+	var result = {};
+	result.myName = this.myName;
+	result.residents = this.getResidents();
+	//result += JSON.stringify(this.getName());
+	//result += JSON.stringify(this.getResidents());
+	return result;
+};
+	
+Settlement.reviver = function (prop, val)
+{
+	var result;
+	if (prop == "")
+	{
+		result = new Settlement();
+		result.myName = val.myName;
+		
+		//We know all of the contents of residents should be Units.
+		//Therefore, we iterate through the contents and convert them to units.
+
+		for (i = 0; i < val.residents.length; i++)
+		{
+			//console.log(val.residents[i]);
+			temp = JSON.stringify(val.residents[i]);
+			temp = JSON.parse(temp, Unit.reviver);
+			val.residents[i] = temp;
+		}
+		
+		result.setResidents(val.residents);
+		
+	}
+	else
+	{
+		result = val; //Return all other properties without transforming them. DON'T FORGET THIS. - Moore.
+	}
+
+	return result;
 };
 

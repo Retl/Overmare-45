@@ -126,3 +126,8 @@ Utilities.IsNumber = function (input)
 	//Check the input to see if AT LEAST the first character is a digit. If it is, true. If this isn't a number, return false.
 	return !isNaN( parseFloat(input) );
 };
+
+Utilities.copyToClipboard = function (text) //Based on a snippet from http://stackoverflow.com/questions/400212/how-to-copy-to-the-clipboard-in-javascript to get around the unsafe copy.
+{
+  return window.prompt("Copy to clipboard: Ctrl+C, Enter", text);
+}

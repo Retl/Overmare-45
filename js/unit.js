@@ -494,7 +494,6 @@ var Unit = function () {
 Unit.reviver = function (prop, val)
 	{
 		var result;
-		console.log(prop);
 		if (prop == "barter" || prop == "battleSaddles" || prop == "explosives" || prop == "lockpick" || 
 			prop == "mew" || prop == "medicine" || prop == "melee" || prop == "mechanics" || 
 			prop == "science" || prop == "firearms" || prop == "sneak" || prop == "speech" || 
@@ -511,6 +510,26 @@ Unit.reviver = function (prop, val)
 			result.myName = val.myName;
 			//result[prop] = val[prop];
 			result.setSpecial(val.strength,val.perception,val.endurance,val.charisma,val.intelligence,val.agility,val.luck)
+			
+			//Copy over all of the skills.
+			for (s in result)
+			{
+				if (result.s instanceof Skill)
+				{
+					result.s = val.s;
+				}
+			}
+			
+			//And now the 'petty' properties get copied too.
+			result.sex = val.sex;
+			result.age = val.age;
+			result.kind = val.kind;
+			result.skillpoints = val.skillpoints;
+			result.xp = val.xp;
+			result.level = val.level;
+			
+			
+			
 			//selectedSettlement.addResident(test);
 		}
 		else
