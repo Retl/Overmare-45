@@ -43,6 +43,11 @@ var Settlement = function ()
 		return residents[i];
 	};
 	
+	this.getResidents = function ()
+	{
+		return residents.slice();
+	};
+	
 	this.hourly = function ()
 	{
 		//Behaviour that should be done for every hour that passes. - Moore.
@@ -51,6 +56,29 @@ var Settlement = function ()
 			residents[i].hourly();
 		}
 		
+	};
+	
+	
+	/*
+	this.toJSON = function ()
+	{
+		var result = "";
+		result += "{";
+		result += JSON.stringify(this.getName());
+		result += JSON.stringify(this.getResidents());
+		result += "}";
+		return result;
+	};
+	*/
+	
+	this.toJSON = function ()
+	{
+		var result = {};
+		result.myName = this.myName;
+		result.residents = this.getResidents();
+		//result += JSON.stringify(this.getName());
+		//result += JSON.stringify(this.getResidents());
+		return result;
 	};
 	
 	this.ToString = function ()
