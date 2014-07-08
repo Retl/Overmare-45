@@ -11,15 +11,9 @@ Memo: Junction, Delicious, Open Sans, Lato. I'm thinking Bold Lato for headers a
 -->
 	<head>
 		<title>Overmare</title>
-		
-		<!-- Latest compiled and minified CSS -->
-		<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
 
-		<!-- Optional theme -->
-		<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
-
-		<!-- Latest compiled and minified JavaScript -->
-		<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+		<link rel="stylesheet" href="css/foundation.css" />
+		<script src="js/vendor/modernizr.js"></script>
 		
 		<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.18/angular.min.js"></script>
 		
@@ -43,14 +37,33 @@ Memo: Junction, Delicious, Open Sans, Lato. I'm thinking Bold Lato for headers a
 		<script type="text/javascript" src="./js/handleUI.js"></script>
 		
 		<link href='http://fonts.googleapis.com/css?family=Lato|Open+Sans' rel='stylesheet' type='text/css'>
-		<link href='./css/overmare.css' rel='stylesheet' type='text/css'>
+		<!-- <link href='./css/overmare.css' rel='stylesheet' type='text/css'> -->
 	</head>
 	<body>
 	
-	<!-- Left Sidebar Panels. -->
-	<!-- Main Menu -->
-	<div id="mainMenu" class="panelMenu glossyDarkPinkBack">
-		<ul>
+	<!-- Slapping in some foundation. -->	
+	<div class="off-canvas-wrap" data-offcanvas>
+	  <div class="inner-wrap">
+		<nav class="tab-bar">
+		  <section class="left-small">
+			<a class="left-off-canvas-toggle menu-icon" href="#"><span></span></a>
+		  </section>
+
+		  <section class="middle tab-bar-section">
+			<h1 class="title">Overmare</h1>
+		  </section>
+
+		  <section class="right-small">
+			<a class="right-off-canvas-toggle menu-icon" href="#"><span></span></a>
+		  </section>
+		</nav>
+
+		<aside class="left-off-canvas-menu">
+		  <ul class="off-canvas-list">
+			<li><label>Main Menu</label></li>
+			<li><a href="#">The Psychohistorians</a></li>
+			<li><a href="#">...</a></li>
+			<!-- Main Menu -->
 			<li class="menuItem"><a href="#nameGenMenu">Name Generator</a></li>
 			<li class="menuItem"><a href="#unitManMenu">Manage Allied Wastelanders</a></li>
 			<li class="menuItem"><a href="#" onclick="handle_btn_renameSettlement();">Rename Settlment</a></li>
@@ -59,57 +72,92 @@ Memo: Junction, Delicious, Open Sans, Lato. I'm thinking Bold Lato for headers a
 			<li class="menuItem"><a href="#" onclick="handle_btn_timescale();">Adjust time between turns.</a></li>
 			<li class="menuItem"><a href="#">Close Menu</a></li>
 			<li class="menuItem"><a href="#">Close Menu</a></li>
-			<li class="menuItem"><a href="#">Close Menu</a></li>
-			<li class="menuItem"><a href="#">Close Menu</a></li>
-			<li class="menuItem"><a href="#">Close Menu</a></li>
-			<li class="menuItem"><a href="#">Close Menu</a></li>
-			<li class="menuItem"><a href="#">Close Menu</a></li>
+		  </ul>
+		</aside>
+
+		<aside class="right-off-canvas-menu">
+		<ul class="tabs" data-tab>
+		  <li class="tab-title active right-off-canvas-toggle"><a href="#panel2-1">Tab 1</a></li>
+		  <li class="tab-title right-off-canvas-toggle"><a href="#panel2-2">Tab 2</a></li>
+		  <li class="tab-title"><a href="#panel2-3">Tab 3</a></li>
+		  <li class="tab-title"><a href="#panel2-4">Tab 4</a></li>
 		</ul>
-	</div>
-		
-	<!-- Name Generator Menu -->
-	<div id="nameGenMenu" class="panelMenu glossyDarkPinkBack">
-		<ul>
-			<li class="menuItem"><a onclick="handle_btn_renameSettlement();">Rename Selected Settlement</a></li>
-			<li class="menuItem"><a onclick="handle_btn_ng();">Rename Selected Unit</a></li>
-			<li class="menuItem"><a onclick="handle_btn_namesminus();">Reduce Words Per Name</a></li>
-			<li class="menuItem"><a onclick="handle_btn_names2();">Increase Words Per Name</a></li>
-			<li class="menuItem"><a onclick="handle_btn_namesplus();">Reset Words Per Name to Two</a></li>
-			<li class="menuItem"><a href="#mainMenu">Return to Main Menu</a></li>
-			<li class="menuItem"><a href="#">Close Menu</a></li>
-			<li class="menuItem"><a href="#">Close Menu</a></li>
-			<li class="menuItem"><a href="#">Close Menu</a></li>
-			<li class="menuItem"><a href="#">Close Menu</a></li>
-			<li class="menuItem"><a href="#">Close Menu</a></li>
-			<li class="menuItem"><a href="#">Close Menu</a></li>
-		</ul>
-	</div>
-	
-	<!-- Unit Management Menu -->
-	<div id="unitManMenu" class="panelMenu glossyDarkPinkBack">
-		<ul>
-			<li class="menuItem"><a onclick="handle_btn_examine();">Examine Status</a></li>
-			<li class="menuItem"><a onclick="handle_btn_levelup();">Level Up!</a></li>
-			<li class="menuItem"><a onclick="handle_btn_newPony();">Manually Assign Skillpoints</a></li>
-			<li class="menuItem"><a onclick="handle_btn_ng();">Rename Selected Unit</a></li>
-			<li class="menuItem"><a href="#mainMenu">Return to Main Menu</a></li>
-			<li class="menuItem"><a href="#">Close Menu</a></li>
-			<li class="menuItem"><a href="#">Close Menu</a></li>
-			<li class="menuItem"><a href="#">Close Menu</a></li>
-			<li class="menuItem"><a href="#">Close Menu</a></li>
-			<li class="menuItem"><a href="#">Close Menu</a></li>
-			<li class="menuItem"><a href="#">Close Menu</a></li>
-		</ul>
+		<div class="tabs-content">
+		  <div class="content active" id="panel2-1">
+			<ul class="off-canvas-list">
+			  
+				<li><label>Namegen</label></li>
+				<li class="menuItem"><a onclick="handle_btn_renameSettlement();">Rename Selected Settlement</a></li>
+				<li class="menuItem"><a onclick="handle_btn_ng();">Rename Selected Unit</a></li>
+				<li class="menuItem"><a onclick="handle_btn_namesminus();">Reduce Words Per Name</a></li>
+				<li class="menuItem"><a onclick="handle_btn_names2();">Increase Words Per Name</a></li>
+				<li class="menuItem"><a onclick="handle_btn_namesplus();">Reset Words Per Name to Two</a></li>
+				<li class="menuItem"><a href="#mainMenu">Return to Main Menu</a></li>
+				<li class="menuItem"><a href="#">Close Menu</a></li>				
+			</ul>
+		  </div>
+		  <div class="content" id="panel2-2">
+			<ul class="off-canvas-list">
+			  
+				<li><label>Unit Management</label></li>
+				<li class="menuItem"><a onclick="handle_btn_examine();">Examine Status</a></li>
+				<li class="menuItem"><a onclick="handle_btn_levelup();">Level Up!</a></li>
+				<li class="menuItem"><a onclick="handle_btn_newPony();">Manually Assign Skillpoints</a></li>
+				<li class="menuItem"><a onclick="handle_btn_ng();">Rename Selected Unit</a></li>
+				<li class="menuItem"><a href="#mainMenu">Return to Main Menu</a></li>
+				<li class="menuItem"><a href="#">Close Menu</a></li>
+				<li class="menuItem"><a href="#">Close Menu</a></li>
+				<li class="menuItem"><a href="#">Close Menu</a></li>
+				<li class="menuItem"><a href="#">Close Menu</a></li>
+				
+			</ul>
+		  </div>
+		  <div class="content" id="panel2-3">
+			<p>Third panel content goes here...</p>
+		  </div>
+		  <div class="content" id="panel2-4">
+			<p>Fourth panel content goes here...</p>
+		  </div>
+		</div>
+		</aside>
+
+		<section id="main" class="main-section" style="overflow: auto; height: 385px;">
+		  <!-- content goes here -->
+		  <p>You can make up ponies and put them in places to live!</p>
+			<p>Note: Each dictionary does a different thing. Consider using the name generator with only one dictionary toggled.<br />
+				<ul>
+					<li><strong>MLPFiM Names</strong> consist of canon and fanon character names based on the wiki.</li>
+					<li><strong>FoE Shared Universe</strong> dictionary consists of character names from FoE Sidefics all mixed up.</li>
+					<li><strong>The Fallout: Equestria dictionary and Pink Eyes dictionary</strong> are most of the words from those stories (with some removals).</li>
+				</ul>
+			</p>
+		</section>
+
+	  <a class="exit-off-canvas"></a>
+
+	  </div>
 	</div>
 	
 	<!-- Header -->
+	<!--
 		<div id="header" class="matteBlackBack">
 			<h1>
-				<a href="#mainMenu"><button id="btn_menu" class="naviconShelf" onclick="handle_btn_menu();"></button></a>
 				Overmare
 			</h1>
 			
 		</div>
+	-->
+	
+	<!-- Left Sidebar Panels. -->
+	
+		
+	<!-- Name Generator Menu -->
+	<div id="nameGenMenu" class="panelMenu glossyDarkPinkBack">
+	</div>
+	
+	<!-- Unit Management Menu -->
+	<div id="unitManMenu" class="panelMenu glossyDarkPinkBack">
+	</div>
 	
 	<!-- Alignment Container -->
 	<div id="centeredDiv">
@@ -120,15 +168,8 @@ Memo: Junction, Delicious, Open Sans, Lato. I'm thinking Bold Lato for headers a
 		</div>
 			
 		<!-- Main Content -->
-		<div id="main">
-			<p>You can make up ponies and put them in places to live!</p>
-			<p>Note: Each dictionary does a different thing. Consider using the name generator with only one dictionary toggled.<br />
-				<ul>
-					<li><strong>MLPFiM Names</strong> consist of canon and fanon character names based on the wiki.</li>
-					<li><strong>FoE Shared Universe</strong> dictionary consists of character names from FoE Sidefics all mixed up.</li>
-					<li><strong>The Fallout: Equestria dictionary and Pink Eyes dictionary</strong> are most of the words from those stories (with some removals).</li>
-				</ul>
-			</p>
+		<div id="main2">
+			<!-- Retl was here. Foundation is a squeaker! -->
 		</div>
 			
 		<!-- Input Panel -->
@@ -154,12 +195,32 @@ Memo: Junction, Delicious, Open Sans, Lato. I'm thinking Bold Lato for headers a
 		</div>
 		<!-- Footer -->
 		<div id="footer">
-			<!-- Content Goes Here -->
+			<div class="row">
+			  <div class="small-3 columns">3 columns</div>
+			  <div class="small-3 columns">3 columns</div>
+			  <div class="small-3 columns">3 columns</div>
+			</div>
+			<div class="row">
+			  <div class="small-5 small-centered columns">5 columns</div>
+			</div>
+			<div class="row">
+			  <div class="small-2 columns">2 columns</div>
+			  <div class="small-10 columns">10 columns</div>
+			</div>
+			<div class="row">
+			  <div class="small-3 columns">3 columns</div>
+			  <div class="small-9 columns">9 columns</div>
+			</div>
 		</div>
 		
 	<!-- End of Centering Alignment Div -->
 	</div>
 
-		
+	<!-- Finally... -->
+		<script src="js/vendor/jquery.js"></script> <!-- Is there a way to make this thing work WITHOUT jquery?-->
+		<script src="js/foundation.min.js"></script>
+		<script>
+		  $(document).foundation();
+		</script>
 	</body>
 </html>

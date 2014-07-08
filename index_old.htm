@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html>
+<!--
+Page Author: Carlis Moore
+Creation Date: 23 May 2014
+Last Modified: 28 June 2014
+Purpose: 
+Permissions: If you want to use elements from this page, please ask me first. I'm generally pretty open and willing to share, but it's better to ask than to not. You can email me at travisuped@gmail.com.  storytime@revelromp.com also works.
+
+Memo: Junction, Delicious, Open Sans, Lato. I'm thinking Bold Lato for headers and 16pt Junction for the usual texts.
+-->
+	<head>
+		<title>Overmare</title>
+		
+		<!-- Latest compiled and minified CSS -->
+		<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+
+		<!-- Optional theme -->
+		<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
+
+		<!-- Latest compiled and minified JavaScript -->
+		<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+		
+		<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.18/angular.min.js"></script>
+		
+		<script type="text/javascript" src="./js/gameTime.js"></script>
+		<script type="text/javascript" src="./js/utilities.js"></script>
+		
+		<script type="text/javascript" src="./js/dict_MLPFiMNames.js"></script>
+		<script type="text/javascript" src="./js/dict_FoEVanillaNames.js"></script>
+		<script type="text/javascript" src="./js/dict_FoEGeneralNames.js"></script>
+		<script type="text/javascript" src="./js/dict_FoEPinkEyesNames.js"></script>
+		<script type="text/javascript" src="./js/namer.js"></script>
+		
+		<script type="text/javascript" src="./js/inventory.js"></script>
+		<script type="text/javascript" src="./js/skill.js"></script>
+		<script type="text/javascript" src="./js/perk.js"></script>
+		<script type="text/javascript" src="./js/unit.js"></script>
+		<script type="text/javascript" src="./js/settlement.js"></script>
+		<script type="text/javascript" src="./js/main.js"></script>
+		<script type="text/javascript" src="./js/test.js"></script>
+		
+		<script type="text/javascript" src="./js/handleUI.js"></script>
+		
+		<link href='http://fonts.googleapis.com/css?family=Lato|Open+Sans' rel='stylesheet' type='text/css'>
+		<link href='./css/overmare.css' rel='stylesheet' type='text/css'>
+	</head>
+	<body>
+	
+	<!-- Left Sidebar Panels. -->
+	<!-- Main Menu -->
+	<div id="mainMenu" class="panelMenu glossyDarkPinkBack">
+		<ul>
+			<li class="menuItem"><a href="#nameGenMenu">Name Generator</a></li>
+			<li class="menuItem"><a href="#unitManMenu">Manage Allied Wastelanders</a></li>
+			<li class="menuItem"><a href="#" onclick="handle_btn_renameSettlement();">Rename Settlment</a></li>
+			<li class="menuItem"><a href="#" onclick="handle_btn_wait(1);">Advance One Hour</a></li>
+			<li class="menuItem"><a href="#" onclick="handle_btn_wait(24);">Advance One Day</a></li>
+			<li class="menuItem"><a href="#" onclick="handle_btn_timescale();">Adjust time between turns.</a></li>
+			<li class="menuItem"><a href="#">Close Menu</a></li>
+			<li class="menuItem"><a href="#">Close Menu</a></li>
+			<li class="menuItem"><a href="#">Close Menu</a></li>
+			<li class="menuItem"><a href="#">Close Menu</a></li>
+			<li class="menuItem"><a href="#">Close Menu</a></li>
+			<li class="menuItem"><a href="#">Close Menu</a></li>
+			<li class="menuItem"><a href="#">Close Menu</a></li>
+		</ul>
+	</div>
+		
+	<!-- Name Generator Menu -->
+	<div id="nameGenMenu" class="panelMenu glossyDarkPinkBack">
+		<ul>
+			<li class="menuItem"><a onclick="handle_btn_renameSettlement();">Rename Selected Settlement</a></li>
+			<li class="menuItem"><a onclick="handle_btn_ng();">Rename Selected Unit</a></li>
+			<li class="menuItem"><a onclick="handle_btn_namesminus();">Reduce Words Per Name</a></li>
+			<li class="menuItem"><a onclick="handle_btn_names2();">Increase Words Per Name</a></li>
+			<li class="menuItem"><a onclick="handle_btn_namesplus();">Reset Words Per Name to Two</a></li>
+			<li class="menuItem"><a href="#mainMenu">Return to Main Menu</a></li>
+			<li class="menuItem"><a href="#">Close Menu</a></li>
+			<li class="menuItem"><a href="#">Close Menu</a></li>
+			<li class="menuItem"><a href="#">Close Menu</a></li>
+			<li class="menuItem"><a href="#">Close Menu</a></li>
+			<li class="menuItem"><a href="#">Close Menu</a></li>
+			<li class="menuItem"><a href="#">Close Menu</a></li>
+		</ul>
+	</div>
+	
+	<!-- Unit Management Menu -->
+	<div id="unitManMenu" class="panelMenu glossyDarkPinkBack">
+		<ul>
+			<li class="menuItem"><a onclick="handle_btn_examine();">Examine Status</a></li>
+			<li class="menuItem"><a onclick="handle_btn_levelup();">Level Up!</a></li>
+			<li class="menuItem"><a onclick="handle_btn_newPony();">Manually Assign Skillpoints</a></li>
+			<li class="menuItem"><a onclick="handle_btn_ng();">Rename Selected Unit</a></li>
+			<li class="menuItem"><a href="#mainMenu">Return to Main Menu</a></li>
+			<li class="menuItem"><a href="#">Close Menu</a></li>
+			<li class="menuItem"><a href="#">Close Menu</a></li>
+			<li class="menuItem"><a href="#">Close Menu</a></li>
+			<li class="menuItem"><a href="#">Close Menu</a></li>
+			<li class="menuItem"><a href="#">Close Menu</a></li>
+			<li class="menuItem"><a href="#">Close Menu</a></li>
+		</ul>
+	</div>
+	
+	<!-- Header -->
+		<div id="header" class="matteBlackBack">
+			<h1>
+				<a href="#mainMenu"><button id="btn_menu" class="naviconShelf" onclick="handle_btn_menu();"></button></a>
+				Overmare
+			</h1>
+			
+		</div>
+	
+	<!-- Alignment Container -->
+	<div id="centeredDiv">
+		
+		<!-- Menu Bar -->
+		<div id="menubar">
+			<!-- Content Goes Here -->
+		</div>
+			
+		<!-- Main Content -->
+		<div id="main">
+			<p>You can make up ponies and put them in places to live!</p>
+			<p>Note: Each dictionary does a different thing. Consider using the name generator with only one dictionary toggled.<br />
+				<ul>
+					<li><strong>MLPFiM Names</strong> consist of canon and fanon character names based on the wiki.</li>
+					<li><strong>FoE Shared Universe</strong> dictionary consists of character names from FoE Sidefics all mixed up.</li>
+					<li><strong>The Fallout: Equestria dictionary and Pink Eyes dictionary</strong> are most of the words from those stories (with some removals).</li>
+				</ul>
+			</p>
+		</div>
+			
+		<!-- Input Panel -->
+		<div id="input">
+			<button id="btn_examine" onmouseup="handle_btn_examine();">Examine</button>
+			<button id="btn_levelUp" onmouseup="handle_btn_levelup();">Level Up!</button>
+			<button id="btn_newPony" onmouseup="handle_btn_newPony();">New Pony</button>
+			<br />
+			<button id="btn_ng" onmouseup="handle_btn_ng();">NameGen</button>
+			<br />
+			<input type="checkbox" value="mlp" checked="checked" id="btn_ng_mlp" onmouseup="handle_btn_ng_mlp()">Toggle MLP:FiM Dictionary</input>
+			<input type="checkbox" value="foe" checked="checked" id="btn_ng_foe" onmouseup="handle_btn_ng_foe()">Toggle Fallout: Equestria Dictionary</input>
+			<input type="checkbox" value="foeu" checked="checked" id="btn_ng_foeu" onmouseup="handle_btn_ng_foeu()">Toggle FoE Shared Universe(s) Dictionary</input>
+			<input type="checkbox" value="pinkeyes" checked="checked" id="btn_ng_pinkeyes" onmouseup="handle_btn_ng_pinkeyes()">Toggle Pink Eyes Dictionary</input>
+			<br />
+			<button id="btn_namesminus" onmouseup="handle_btn_namesminus();">-1 Word</button>
+			<button id="btn_names2" onmouseup="handle_btn_names2();">2 Word Names</button>
+			<button id="btn_namesplus" onmouseup="handle_btn_namesplus();">+1 Word</button>
+			
+			<br />
+			<button id="btn_back" onmouseup="handle_btn_wait(1);">Wait</button>
+			<button id="btn_delsave" onmouseup="handle_btn_delete_save();">Delete Save</button>
+		</div>
+		<!-- Footer -->
+		<div id="footer">
+			<!-- Content Goes Here -->
+		</div>
+		
+	<!-- End of Centering Alignment Div -->
+	</div>
+
+		
+	</body>
+</html>
