@@ -27,6 +27,9 @@ var GameTime = function ()
 			
 			numHours -= 1;
 		}
+		
+		//Only save once.
+		Utilities.save();
 	};
 	
 	

@@ -10,3 +10,5 @@ testSettlement = new Settlement();
 var selectedSettlement = testSettlement;
 
 selectedSettlement.addResident(test);
+
+Utilities.load(); //TODO: Consider not adding the defaults if there's data to load. - Moore.

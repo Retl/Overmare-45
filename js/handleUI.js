@@ -142,30 +142,21 @@ function handle_btn_save()
 {
 	//Cycle through all current data, convert to JSON String, and save it in a cookie.
 	//var save;
-	save = JSON.stringify(selectedSettlement);
-	return save;
+	Utilities.save();
 }
 
 function handle_btn_load()
 {
-	//Overwrite current data with the save data from the cookie.
-	var loaded = null;
-	//Only do it if there is save data present.
-	if (typeof save != "undefined")
-	{
-		loaded = JSON.parse(save, Settlement.reviver);
-	}
-	
-	selectedSettlement = loaded;
-	return loaded;
+	Utilities.load();
 }
 
 function handle_btn_save_export()
 {
 	//Only do it if there is save data present.
-	if (typeof save != "undefined")
+	if (typeof save != "undefined" && save != null)
 	{
-		var um = Utilities.copyToClipboard(save);
+		var um = Utilities.copyToClipboard(save); //WARNING: This won't work. Chrome trunctates to 2k characters with a '...' in the middle.
+		//Consider using a textfield instead. - Moore.
 		console.log(um.length + " " + save.length);
 		console.log(um == save);
 	}
@@ -194,6 +185,7 @@ function handle_btn_save_import()
 
 function handle_btn_delete_save()
 {
-	//Delete the save data.
+	Utilities.deleteSave();
+	location.reload(true);
 }
 //END OF: Save/Load Handlers
