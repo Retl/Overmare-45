@@ -411,10 +411,20 @@ var Unit = function () {
 			if (usePrefs)
 			{
 				which = Utilities.RandomInArray(this.prefSkills); //This just gets the index. We need to find the corresponding element index in the skill list.
-				//console.log(this.prefSkills[which].myName + " Should = ");
-				which = this.skillList.indexOf(this.prefSkills[which]);
-				//console.log(this.skillList[which].myName);
+				//which = this.skillList.indexOf(this.prefSkills[which]);
 				
+				//Look for another skill with the same name. If there is one, pick it. If not, give -1.
+				var changed = false;
+				for (var j = 0; j < this.skillList.length; j++)
+				{
+					if (this.skillList[j].myName == this.prefSkills[which].myName)
+					{
+						which = j;
+						changed = true;
+						j = this.skillList.length;
+					}
+				}
+				if (changed == false) {which = -1;}
 			}
 			
 			else
@@ -422,7 +432,7 @@ var Unit = function () {
 				which = Utilities.RandomInArray(this.skillList);
 			}
 			
-			if (!this.skillList[which].isMaxed())
+			if (which != -1 && !this.skillList[which].isMaxed())
 			{
 				added = this.skillList[which].addRank(numPoints);
 			}
@@ -501,7 +511,7 @@ Unit.reviver = function (prop, val)
 		{
 			result = new Skill(val.base, val.myName); //If it's a skill, you should create a new skill object. - Moore.
 			result.setTag(val.tag);
-			result.addRank(val.ranks);
+			result.addRank(val.rank);
 			result.misc = val.misc;
 		}
 		else if (prop == "") //The end of the chain- the 'propertiesObject' with all the other stuff in it.
@@ -512,13 +522,38 @@ Unit.reviver = function (prop, val)
 			result.setSpecial(val.strength,val.perception,val.endurance,val.charisma,val.intelligence,val.agility,val.luck)
 			
 			//Copy over all of the skills.
+			result.skillList = [];
+			
 			for (s in result)
 			{
-				if (result.s instanceof Skill)
+				if (result[s] instanceof Skill && val[s] instanceof Skill)
 				{
-					result.s = val.s;
+					result[s] = val[s];
+					result.skillList.push(result[s]);
 				}
 			}
+			
+			//Copy the skills corresponding to the prefSkill object names into the new prefSkills.
+			for (s in val.prefSkills)
+			{
+				var matchingSkill = null;
+				for (var i = 0; i < result.skillList.length; i++)
+				{
+					if (result.skillList[i].myName == val.prefSkills[s].myName)
+					{
+						matchingSkill = result.skillList[i];
+						i = result.skillList.length; //Ends the loop without a break.
+					}
+				}
+				
+				if (matchingSkill != null)
+				{
+					result.prefSkills[s] = matchingSkill;
+				}
+			}
+			
+			//result.skillList = [val.skillList];
+			//result.prefSkills = val.prefSkills;
 			
 			//And now the 'petty' properties get copied too.
 			result.sex = val.sex;

@@ -29,17 +29,16 @@ var Skill = function (theBase, theName)
 	{
 		if (value == true || value == 15 || value == "15") //If we wanted to reuse this for some other game, we might not want this hard-coded. Leaving it here to prevent problems for this implementation. - Moore
 		{
-			this.base = 15;
+			this.tag = 15;
 		}
 		else if (value == false || value == 0 || value == "0")
 		{
-			this.base = 0;
+			this.tag = 0;
 		}
 		else
 		{
 			console.log("Attempted to set a value (" + value +") that was neither true, false, 15, or 0 for a skill's tag.");
 		}
-		this.base = value;
 	};
 	
 	this.addRank = function (value)

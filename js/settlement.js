@@ -100,10 +100,10 @@ Settlement.reviver = function (prop, val)
 		//We know all of the contents of residents should be Units.
 		//Therefore, we iterate through the contents and convert them to units.
 
-		for (i = 0; i < val.residents.length; i++)
+		for (var i = 0; i < val.residents.length; i++)
 		{
 			//console.log(val.residents[i]);
-			temp = JSON.stringify(val.residents[i]);
+			var temp = JSON.stringify(val.residents[i]);
 			temp = JSON.parse(temp, Unit.reviver);
 			val.residents[i] = temp;
 		}
