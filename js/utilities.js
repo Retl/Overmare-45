@@ -21,6 +21,15 @@ Utilities.AppendToDiv = function (elementId, newContent)
 	}
 };
 
+Utilities.WriteToDiv = function (elementId, newContent) 
+{
+	theDiv = document.getElementById(elementId);
+	if (theDiv != null)
+	{
+		theDiv.innerHTML = newContent;
+	}
+};
+
 Utilities.ArrayNamesToString = function (a)
 {
 	//Given an array, cycle through all of its contents check to see if each element has a name, then add that to the result. - Moore.
@@ -101,25 +110,34 @@ Utilities.RandomInArray = function(a)
 	return Utilities.RandomIntInRange(0, a.length - 1);
 };
 
-Utilities.WriteNoLine = function (newContent) 
+Utilities.WriteNoLine = function (newContent, elementId) 
 {
+	if (typeof elementId == "undefined")
+	{
+		elementId = 'main';
+	}
+	
 	if (typeof newContent == "undefined")
 	{
 		newContent = "";
 	}
-	Utilities.AppendToDiv('main', newContent);
-	Utilities.ScrollToBottom('main');
+	Utilities.AppendToDiv(elementId, newContent);
+	Utilities.ScrollToBottom(elementId);
 };
 
-Utilities.Write = function (newContent) 
+Utilities.Write = function (newContent, elementId) 
 {
+	if (typeof elementId == "undefined")
+	{
+		elementId = 'main';
+	}
+	
 	if (typeof newContent == "undefined")
 	{
 		newContent = "";
 	}
-	Utilities.WriteNoLine(newContent + '<br />');
+	Utilities.WriteNoLine(newContent + '<br />', elementId);
 };
-
 
 Utilities.IsNumber = function (input)
 {

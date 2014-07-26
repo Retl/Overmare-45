@@ -1,7 +1,9 @@
 function handle_btn_examine()
 {
-	 Utilities.Write("Settlement: " + selectedSettlement.ToString());
-	 Utilities.Write("Selected Unit: " + selectedUnit.ToString());
+	Utilities.WriteToDiv("pnl_settlement", "");
+	Utilities.WriteToDiv("pnl_unit", "");
+	 Utilities.Write("Settlement: " + selectedSettlement.ToString(), "pnl_settlement");
+	 Utilities.Write("Selected Unit: " + selectedUnit.ToString(), "pnl_unit");
 	 selectedUnit.getReports();
 }
 
