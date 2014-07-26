@@ -66,15 +66,32 @@ var Unit = function () {
 	this.unarmed = new Skill(0, "Unarmed");
 	
 	
-	//Science knowledge stats.
+	//Retl's Science knowledge stats.
 	this.agriculture = new Skill(0, "Agriculture"); //Good for creating and sustaining plant growth. Especially for food.
 	this.architecture = new Skill(0, "Architecture"); //Necessary for leading construction. Can direct others with the physical strength to complete it.
 	this.biology = new Skill(0, "Biology"); //Includes applications like health. Helps with hunting.
-	this.chemistry = new Skill(0, "Chemistry"); //Includes poisons, intoxicants, medicine, and similar.
+	this.chemistry_r = new Skill(0, "Chemistry"); //Includes poisons, intoxicants, medicine, and similar.
 	this.machines = new Skill(0, "Machines"); //Anything mechanical.
+	
+	//Mad Modd's unique skill stats.
+	this.thrown = new Skill(0, "Thrown Weapons");
+	this.traps = new Skill(0, "Survivalism & Traps");
+	this.intimidation = new Skill(0, "Bluff & Intimidation");
+	this.negotiation = new Skill(0, "Negotiation & Seduction");
+	this.hacking = new Skill(0, "Hacking & Matrix Tech");
+	this.chemistry = new Skill(0, "Alchemy and Chemistry");
+	this.lore = new Skill(0, "Academics & Lore");
+	this.pilot = new Skill(0, "Pilot");
+	this.repair = new Skill(0, "Repair & Mechanics");
+	this.shamanism = new Skill(0, "Shamanism");
+	this.magic = new Skill(0, "Magic");
 	
 	this.skillList = [this.barter, this.battleSaddles, this.explosives, this.lockpick, this.mew, this.medicine, this.melee, 
 						this.mechanics, this.science, this.firearms, this.sneak, this.speech, this.survival, this.unarmed];
+						
+	this.skillListMadModd = [this.unarmed, this.thrown, this.mew, this.melee, this.firearms, this.explosives, this.battleSaddles, 
+						this.traps, this.intimidation, this.negotiation, this.sneak, this.lockpick, this.hacking, this.chemistry,
+						this.medicine, this.lore, this.pilot, this.repair, this.shamanism, this.magic];
 						
 	this.prefSkills; //This is an array of the skills (by reference) that the character has an affinity for. Typically, this will be the skills their SPECIAL marked highest. - Moore.
 	
