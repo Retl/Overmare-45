@@ -16,7 +16,17 @@ var Skill = function (theBase, theName)
 	//Accessor Methods
 	this.getTotal = function ()
 	{
-		return this.base + this.tag + this.rank + this.perk +  this.item + this.misc;
+		if (!Utilities.isDefined(Controller) || !Controller.useMadModdRules || this.tag <= 0)
+		{
+			return this.base + this.tag + this.rank + this.perk +  this.item + this.misc;
+		}
+		else
+		{
+			//In Mad Modd rules, tag skills get an extra 2 points of value for the first 15 ranks gained.
+			//This section also does NOT occur if there are no tag points.
+			var bonusElig = Utilities.clamp(this.rank, 0, 15);
+			return this.base + this.tag + (bonusElig * 2) + (this.rank - bonusElig) + this.perk +  this.item + this.misc;
+		}
 	};
 	
 	//Mutator Methods

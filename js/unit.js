@@ -118,7 +118,21 @@ var Unit = function () {
 	//This stat is limited by all the other stats, but not set by them.
 	this.traits;
 	this.perks;
-	this.tags;
+	
+	//Select tags randomly. Assign the points.
+	if (!Controller.useMadModdRules)
+	{
+		this.tags = Utilities.RandomInArray(this.skillList, 3);
+	}
+	else
+	{
+		this.tags = Utilities.RandomInArray(this.skillListMadModd, 3);
+	}
+	
+	for (var i in this.tags)
+	{
+		this.tags[i].setTag(15);
+	}
 	
 	//Methods.
 	this.setSpecial = function (s,p,e,c,i,a,l)
@@ -182,7 +196,7 @@ var Unit = function () {
 	
 	this.setDerivedSkills = function ()
 	{
-		if (Utilities.isDefined(Controller) && !Controller.useMadModdRules)
+		if (!Utilities.isDefined(Controller) || !Controller.useMadModdRules)
 		{
 			this.barter.setBase((this.charisma * 2) + Math.floor(this.luck / 2));
 			this.battleSaddles.setBase((this.endurance * 2) + Math.floor(this.luck / 2));
@@ -201,20 +215,28 @@ var Unit = function () {
 		}
 		else
 		{
-			this.barter.setBase((this.charisma * 2) + Math.floor(this.luck / 2));
-			this.battleSaddles.setBase((this.endurance * 2) + Math.floor(this.luck / 2));
+			this.battleSaddles.setBase((this.perception + (this.endurance * 2) + this.strength - 10) + Math.floor(this.luck / 2));
 			this.explosives.setBase((this.perception * 2) + Math.floor(this.luck / 2));
+			this.firearms.setBase((this.perception + this.agility) + Math.floor(this.luck / 2));
+			this.mew.setBase((this.per * 2) + Math.floor(this.luck / 2));
+			this.melee.setBase((this.strength + this.agility) + Math.floor(this.luck / 2));
+			this.thrown.setBase((this.strength + this.agility) + Math.floor(this.luck / 2));
+			this.unarmed.setBase((this.endurance + this.agility) + Math.floor(this.luck / 2));
+			
+			this.lore.setBase((this.intelligence * 2) + Math.floor(this.luck / 2));
+			this.chemistry.setBase((this.intelligence * 2) + Math.floor(this.luck / 2));
+			this.intimidation.setBase((this.charisma * 2) + Math.floor(this.luck / 2));
+			this.hacking.setBase((this.intelligence * 2) + Math.floor(this.luck / 2));
 			this.lockpick.setBase((this.perception * 2) + Math.floor(this.luck / 2));
-			this.mew.setBase((this.perception * 2) + Math.floor(this.luck / 2));
-			this.medicine.setBase((this.intelligence * 2) + Math.floor(this.luck / 2));
-			this.melee.setBase((this.strength * 2) + Math.floor(this.luck / 2));
-			this.mechanics.setBase((this.intelligence * 2) + Math.floor(this.luck / 2));
-			this.science.setBase((this.strength * 2) + Math.floor(this.luck / 2));
-			this.firearms.setBase((this.agility * 2) + Math.floor(this.luck / 2));
+			this.medicine.setBase((this.intelligence  * 2) + Math.floor(this.luck / 2));
+			this.negotiation.setBase((this.charisma * 2) + Math.floor(this.luck / 2));
+			this.pilot.setBase((this.agility * 2) + Math.floor(this.luck / 2));
+			this.repair.setBase((this.intelligence * 2) + Math.floor(this.luck / 2));
 			this.sneak.setBase((this.agility * 2) + Math.floor(this.luck / 2));
-			this.speech.setBase((this.charisma * 2) + Math.floor(this.luck / 2));
-			this.survival.setBase((this.endurance * 2) + Math.floor(this.luck / 2));
-			this.unarmed.setBase((this.endurance * 2) + Math.floor(this.luck / 2));
+			this.traps.setBase((this.perception + this.endurance) + Math.floor(this.luck / 2));
+			
+			this.shamanism.setBase((this.charisma * 2) + Math.floor(this.luck / 2));
+			this.magic.setBase((this.perception + this.intelligence) + Math.floor(this.luck / 2));
 		}
 	};
 	

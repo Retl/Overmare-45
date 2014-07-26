@@ -105,9 +105,42 @@ Utilities.RandomIntInRange = function(min, max)
 	return Math.floor((Math.random() * range) + min);
 };
 
-Utilities.RandomInArray = function(a)
+Utilities.RandomInArray = function(a, b)
 {
-	return Utilities.RandomIntInRange(0, a.length - 1);
+	var c;
+	var result = [];
+	
+	if (typeof a != "object")
+	{
+		c = [];
+		result = c;
+	}
+	else
+	{
+		c = a.slice();
+	}
+	
+	if (!Utilities.IsNumber(b))
+	{
+		b = 1;
+	}
+	
+	for (; b > 0 && c.length > 0; b--)
+	{
+		var sel = Utilities.RandomIntInRange(0, c.length - 1);
+		result.push(c.splice(sel,1)[0]);
+	}
+	
+	//This allows this method to return just the object if there's only one thing in the array...'
+	//It honestly might be safer to ALWAYS return an array and handle it from whoever's calling it.'
+	/*
+	if (result.length == 1)
+	{
+		result = result[0];
+	}
+	*/
+	
+	return result;
 };
 
 Utilities.WriteNoLine = function (newContent, elementId) 
@@ -137,6 +170,14 @@ Utilities.Write = function (newContent, elementId)
 		newContent = "";
 	}
 	Utilities.WriteNoLine(newContent + '<br />', elementId);
+};
+
+
+Utilities.clamp = function (val, min, max)
+{
+	val = Math.max(min, val);
+	val = Math.min(max, val);
+	return val;
 };
 
 Utilities.IsNumber = function (input)
