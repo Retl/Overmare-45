@@ -182,20 +182,40 @@ var Unit = function () {
 	
 	this.setDerivedSkills = function ()
 	{
-		this.barter.setBase((this.charisma * 2) + Math.floor(this.luck / 2));
-		this.battleSaddles.setBase((this.endurance * 2) + Math.floor(this.luck / 2));
-		this.explosives.setBase((this.perception * 2) + Math.floor(this.luck / 2));
-		this.lockpick.setBase((this.perception * 2) + Math.floor(this.luck / 2));
-		this.mew.setBase((this.perception * 2) + Math.floor(this.luck / 2));
-		this.medicine.setBase((this.intelligence * 2) + Math.floor(this.luck / 2));
-		this.melee.setBase((this.strength * 2) + Math.floor(this.luck / 2));
-		this.mechanics.setBase((this.intelligence * 2) + Math.floor(this.luck / 2));
-		this.science.setBase((this.strength * 2) + Math.floor(this.luck / 2));
-		this.firearms.setBase((this.agility * 2) + Math.floor(this.luck / 2));
-		this.sneak.setBase((this.agility * 2) + Math.floor(this.luck / 2));
-		this.speech.setBase((this.charisma * 2) + Math.floor(this.luck / 2));
-		this.survival.setBase((this.endurance * 2) + Math.floor(this.luck / 2));
-		this.unarmed.setBase((this.endurance * 2) + Math.floor(this.luck / 2));
+		if (Utilities.isDefined(Controller) && !Controller.useMadModdRules)
+		{
+			this.barter.setBase((this.charisma * 2) + Math.floor(this.luck / 2));
+			this.battleSaddles.setBase((this.endurance * 2) + Math.floor(this.luck / 2));
+			this.explosives.setBase((this.perception * 2) + Math.floor(this.luck / 2));
+			this.lockpick.setBase((this.perception * 2) + Math.floor(this.luck / 2));
+			this.mew.setBase((this.perception * 2) + Math.floor(this.luck / 2));
+			this.medicine.setBase((this.intelligence * 2) + Math.floor(this.luck / 2));
+			this.melee.setBase((this.strength * 2) + Math.floor(this.luck / 2));
+			this.mechanics.setBase((this.intelligence * 2) + Math.floor(this.luck / 2));
+			this.science.setBase((this.strength * 2) + Math.floor(this.luck / 2));
+			this.firearms.setBase((this.agility * 2) + Math.floor(this.luck / 2));
+			this.sneak.setBase((this.agility * 2) + Math.floor(this.luck / 2));
+			this.speech.setBase((this.charisma * 2) + Math.floor(this.luck / 2));
+			this.survival.setBase((this.endurance * 2) + Math.floor(this.luck / 2));
+			this.unarmed.setBase((this.endurance * 2) + Math.floor(this.luck / 2));
+		}
+		else
+		{
+			this.barter.setBase((this.charisma * 2) + Math.floor(this.luck / 2));
+			this.battleSaddles.setBase((this.endurance * 2) + Math.floor(this.luck / 2));
+			this.explosives.setBase((this.perception * 2) + Math.floor(this.luck / 2));
+			this.lockpick.setBase((this.perception * 2) + Math.floor(this.luck / 2));
+			this.mew.setBase((this.perception * 2) + Math.floor(this.luck / 2));
+			this.medicine.setBase((this.intelligence * 2) + Math.floor(this.luck / 2));
+			this.melee.setBase((this.strength * 2) + Math.floor(this.luck / 2));
+			this.mechanics.setBase((this.intelligence * 2) + Math.floor(this.luck / 2));
+			this.science.setBase((this.strength * 2) + Math.floor(this.luck / 2));
+			this.firearms.setBase((this.agility * 2) + Math.floor(this.luck / 2));
+			this.sneak.setBase((this.agility * 2) + Math.floor(this.luck / 2));
+			this.speech.setBase((this.charisma * 2) + Math.floor(this.luck / 2));
+			this.survival.setBase((this.endurance * 2) + Math.floor(this.luck / 2));
+			this.unarmed.setBase((this.endurance * 2) + Math.floor(this.luck / 2));
+		}
 	};
 	
 	this.autoPrefSkills = function () 

@@ -145,6 +145,12 @@ Utilities.IsNumber = function (input)
 	return !isNaN( parseFloat(input) );
 };
 
+Utilities.isDefined = function (input)
+{
+	//Check the input to see if the type is undefined.
+	return !(typeof input == "undefined");
+};
+
 Utilities.copyToClipboard = function (text) //Based on a snippet from http://stackoverflow.com/questions/400212/how-to-copy-to-the-clipboard-in-javascript to get around the unsafe copy.
 {
   return window.prompt("Copy to clipboard: Ctrl+C, Enter", text);
