@@ -1,4 +1,4 @@
-var GameTime = function ()
+exports.GameTime = function ()
 {	
 	//Private Members. - Moore
 	var date = new Date();

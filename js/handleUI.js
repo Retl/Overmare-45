@@ -191,3 +191,4 @@ function handle_btn_delete_save()
 	location.reload(true);
 }
 //END OF: Save/Load Handlers
+exports.handleUI = this;

@@ -110,10 +110,10 @@ var Unit = function () {
 	this.caps;
 	
 	//Stats only used during combat
-	this.maxhp;
-	this.hp;
-	this.maxap;
-	this.ap;
+	this.maxhp = 0;
+	this.hp = 0;
+	this.maxap = 0;
+	this.ap = 0;
 	
 	//This stat is limited by all the other stats, but not set by them.
 	this.traits;
@@ -238,6 +238,9 @@ var Unit = function () {
 			this.shamanism.setBase((this.charisma * 2) + Math.floor(this.luck / 2));
 			this.magic.setBase((this.perception + this.intelligence) + Math.floor(this.luck / 2));
 		}
+		
+		this.maxhp = 100 + this.endurance * 3;
+		this.hp = this.maxhp;
 	};
 	
 	this.autoPrefSkills = function () 
@@ -274,6 +277,8 @@ var Unit = function () {
 				this.xp = LevelTable[this.level];
 				this.level++;
 				this.skillpoints += 10 + (this.intelligence / 2); //TODO: Make an accessor method that gets the value ignoring temporary boosts. - Moore.
+				this.maxhp += this.endurance;
+				this.hp += this.endurance;
 				Utilities.Write("Footnote: Level Up! Level ( " + this.level + " )\nNew Perk Added: ");
 			}
 			
@@ -432,9 +437,12 @@ var Unit = function () {
 	
 	this.getReports = function ()
 	{
-		this.reportHunger();
-		this.reportThirst();
-		this.reportSleep();
+		var result = "";
+		result += this.reportHunger() + "\n";
+		result += this.reportThirst() + "\n";
+		result += this.reportSleep() + "\n";
+		
+		return result;
 	};
 	
 	this.hasSkillPoints = function (num)
@@ -476,7 +484,7 @@ var Unit = function () {
 				var changed = false;
 				for (var j = 0; j < this.skillList.length; j++)
 				{
-					if (this.skillList[j].myName == this.prefSkills[which].myName)
+					if (Utilities.IsDefined(this.skillList[j]) && this.skillList[j].myName == this.prefSkills[which].myName)
 					{
 						which = j;
 						changed = true;
@@ -518,23 +526,23 @@ var Unit = function () {
 	this.ToString = function ()
 	{
 		result ="";
-		result += "Name: " + this.myName + "\n";
-		result += "Age: " + this.age + "\n";
-		result += "Sex: " + this.sex + "\n";
-		result += "Kind: " + this.kind + "\n";
+		result += "Name: " + this.myName + "\r\n";
+		result += "Age: " + this.age + "\r\n";
+		result += "Sex: " + this.sex + "\r\n";
+		result += "Kind: " + this.kind + "\r\n";
 		
-		result += "<br />";
+		result += "\r\n";
 		
-		result += "Level: " + this.level + "\n";
-		result += "STR: " + this.strength + "\n";
-		result += "PER: " + this.perception + "\n";
-		result += "END: " + this.endurance + "\n";
-		result += "CHA: " + this.charisma + "\n";
-		result += "INT: " + this.intelligence + "\n";
-		result += "AGL: " + this.agility + "\n";
-		result += "LCK: " + this.luck + "\n";
+		result += "Level: " + this.level + "\r\n";
+		result += "STR: " + this.strength + "\r\n";
+		result += "PER: " + this.perception + "\r\n";
+		result += "END: " + this.endurance + "\r\n";
+		result += "CHA: " + this.charisma + "\r\n";
+		result += "INT: " + this.intelligence + "\r\n";
+		result += "AGL: " + this.agility + "\r\n";
+		result += "LCK: " + this.luck + "\r\n";
 		
-		result += "<br />";
+		result += "\r\n";
 		
 		for (var i = 0; i < this.skillList.length; i++)
 		{
@@ -543,13 +551,19 @@ var Unit = function () {
 			result += " ";
 		}
 		
-		result += "<br />";
+		result += "\r\n";
 		
-		result += "Skillpoints Remaining: " + this.skillpoints + "\n";
-		result += "<br />";
+		result += "Skillpoints Remaining: " + this.skillpoints + "\r\n";
+		result += "\r\n";
 		
 		return result;
 	};
+	
+	//Some useful accessors
+	this.getName = function ()
+	{
+		return this.myName;
+	}
 	
 	//Final setup before returning...
 	this.setRandomSpecial(5,5,5,5,5,5,5);
@@ -633,3 +647,5 @@ Unit.reviver = function (prop, val)
 		
 		return result;
 	};
+	
+exports.Unit = Unit;

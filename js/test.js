@@ -104,3 +104,4 @@ var reportPassFail = function (f)
 };
 
 //runTests();
+exports.Test = this;

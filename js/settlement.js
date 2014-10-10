@@ -1,4 +1,4 @@
-var Settlement = function ()
+Settlement = function ()
 {	
 	//Private Members. - Moore
 	var residents = [];
@@ -65,7 +65,7 @@ var Settlement = function ()
 	
 	this.ToString = function ()
 	{
-		return this.myName + " | Residents: "+ this.listResidentsClickable() + "<br />";
+		return this.myName + " | Residents: "+ this.listResidentsClickable() + "\r\n";
 	};
 	
 	this.getName = function ()
@@ -119,3 +119,4 @@ Settlement.reviver = function (prop, val)
 	return result;
 };
 
+exports.Settlement = Settlement;

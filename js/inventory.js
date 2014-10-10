@@ -1,4 +1,4 @@
-var Inventory = function ()
+exports.Inventory = function ()
 {
 	var contents = []; //Private. - Moore
 	

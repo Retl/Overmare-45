@@ -1,4 +1,4 @@
-var Skill = function (theBase, theName)
+Skill = function (theBase, theName)
 {
 
 	if (typeof theBase == "undefined") {theBase = 0;} //If this constructor is called and no base is given, assume 0.
@@ -90,3 +90,5 @@ Skill.compareSkills = function (a, b)
 	//Array sort would interpret a positive result as A being > B, and sort A later in the array than B.	
 	return a.getTotal() - b.getTotal();
 };
+
+exports.Skill = Skill;

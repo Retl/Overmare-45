@@ -5,29 +5,37 @@ Utilities = function ()
 
 Utilities.ScrollToBottom = function (elementId) 
 {
+	/*
 	theDiv = document.getElementById(elementId);
 	if (theDiv != null)
 	{
 		theDiv.scrollTop = theDiv.scrollHeight;
 	}
+	*/
 };
 
 Utilities.AppendToDiv = function (elementId, newContent) 
 {
+	/*
 	theDiv = document.getElementById(elementId);
 	if (theDiv != null)
 	{
 		theDiv.innerHTML += newContent;
 	}
+	*/
+	console.log(newContent);
 };
 
 Utilities.WriteToDiv = function (elementId, newContent) 
 {
+	/*
 	theDiv = document.getElementById(elementId);
 	if (theDiv != null)
 	{
 		theDiv.innerHTML = newContent;
 	}
+	*/
+	console.log(newContent);
 };
 
 Utilities.ArrayNamesToString = function (a)
@@ -169,7 +177,7 @@ Utilities.Write = function (newContent, elementId)
 	{
 		newContent = "";
 	}
-	Utilities.WriteNoLine(newContent + '<br />', elementId);
+	Utilities.WriteNoLine(newContent + '\r\n', elementId);
 };
 
 
@@ -196,7 +204,7 @@ Utilities.copyToClipboard = function (text) //Based on a snippet from http://sta
 {
   return window.prompt("Copy to clipboard: Ctrl+C, Enter", text);
 };
-
+/* 
 //START OF: Saving and Loading Utility Methods.
 Utilities.save = function () //Based on a snippet from http://stackoverflow.com/questions/400212/how-to-copy-to-the-clipboard-in-javascript to get around the unsafe copy.
 {
@@ -236,6 +244,10 @@ Utilities.deleteSave = function () //Based on a snippet from http://stackoverflo
 	Utilities.Write("Save data deleted successfully.");
 	return save;
 }
+ */
 
-
+Utilities.load = function () {};
+Utilities.save = function () {};
+Utilities.deleteSave = function () {};
 //END OF: Saving and Loading Utility Methods.
+exports.Utilities = Utilities;

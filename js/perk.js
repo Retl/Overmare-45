@@ -301,3 +301,5 @@ Perk.listPerks = function ()
 	
 	return result;
 };
+
+exports.Perk = Perk;
