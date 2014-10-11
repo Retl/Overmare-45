@@ -20,7 +20,7 @@ Controller.handle_btn_examine = function ()
 
 Controller.levelup = function ()
 {
-	selectedUnit.levelUp();
+	Controller.selectedUnit.levelUp();
 }
 
 Controller.getStatusBar = function ()
@@ -57,9 +57,9 @@ Controller.waitHours = function (hours)
 	//Advances the time and then reports how much time has passed. - Moore.
 	time.waitHours(hours);
 	time.displayTime();
-	selectedSettlement.DisplayLocation();
+	Controller.selectedSettlement.DisplayLocation();
 	Utilities.Write();
-	selectedUnit.getReports();
+	Controller.selectedUnit.getReports();
 };
 
 Controller.setTimescale = function (newTime)

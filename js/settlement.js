@@ -75,7 +75,7 @@ Settlement = function ()
 	
 	this.DisplayLocation = function()
 	{
-		Utilities.WriteNoLine(" - LOCATION: " + selectedSettlement.myName + ".");
+		Utilities.WriteNoLine(" - LOCATION: " + this.myName + ".");
 	};
 };
 

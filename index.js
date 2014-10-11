@@ -35,18 +35,21 @@ Controller.gameTimeInterval = setInterval(Main.mainIntervalCallback, 60 * 1000);
 //console.log(Unit.toString());
 test = new Unit();
 var selectedUnit = test;
+Controller.selectedUnit = selectedUnit;
 
 testSettlement = new Settlement();
 var selectedSettlement = testSettlement;
+Controller.selectedSettlement = testSettlement;
 
-selectedSettlement.addResident(test);
+Controller.selectedSettlement.addResident(test);
 
 Utilities.load(); //TODO: Consider not adding the defaults if there's data to load. - Moore.
 
 exports = this;
 
 console.log(displayThisString.green);
-//console.log(testSettlement);
+console.log(testSettlement);
+console.log(Controller.selectedSettlement);
 //console.log(test);
 //console.log(time);
 
@@ -61,14 +64,15 @@ var server = net.createServer(function (socket) {
   if (msg == "quit") 
   {
 	socket.write("SERVER SHUTTING DOWN NOW!"); server.end;
+	process.exit();
   }
   if (msg.toUpperCase() == "look".toUpperCase()) 
   {
-	socket.write(selectedSettlement.ToString());
-	socket.write(selectedUnit.ToString());
-	socket.write(selectedUnit.getReports());
-	socket.write("\r\n");
-	socket.write(Controller.getStatusBar());
+	socket.write(Controller.selectedSettlement.ToString());
+	socket.write(Controller.selectedUnit.ToString());
+	socket.write(Controller.selectedUnit.getReports());
+	socket.write("Statusline.");
+	//socket.write(Controller.getStatusBar());
   }
   else if (msg.toUpperCase() == "fast".toUpperCase()) 
   {

@@ -452,6 +452,7 @@ var Unit = function () {
 		return result;
 	};
 	
+	//This is where it's currently breaking.
 	this.autoApplySkillpoints = function(numPoints) //This version is an all-or-nothing attempt to apply the points to one skill.
 	{
 		if (this.hasSkillPoints(numPoints))
@@ -484,11 +485,17 @@ var Unit = function () {
 				var changed = false;
 				for (var j = 0; j < this.skillList.length; j++)
 				{
-					if (Utilities.IsDefined(this.skillList[j]) && this.skillList[j].myName == this.prefSkills[which].myName)
+					//TESTING
+					console.log("Utilities.isDefined(this.skillList[j]) && this.skillList[j].myName == this.prefSkills[which].myName" + this.skillList[j].myName + " | " + this.prefSkills[which].myName);
+					if (Utilities.isDefined(this.skillList[j]) && this.skillList[j].myName == this.prefSkills[which].myName)
 					{
 						which = j;
 						changed = true;
 						j = this.skillList.length;
+					}
+					else if(!Utilities.isDefined(this.skillList[j]))
+					{
+						console.log("OMG WHERE IS THE SKILLLIST WHY IS IT WOOPSED");
 					}
 				}
 				if (changed == false) {which = -1;}
