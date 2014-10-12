@@ -23,9 +23,15 @@ Controller.levelup = function ()
 	Controller.selectedUnit.levelUp();
 }
 
-Controller.getStatusBar = function ()
+Controller.getStatusBar = function (whichUnit)
 {
-	return "<"+ selectedUnit.getName() +": "+ selectedUnit.hp +"/"+ selectedUnit.maxhp +" HP ##/## AP"+ "" +">";
+	if (!Utilities.isDefined(whichUnit))
+	{
+		whichUnit = Controller.selectedUnit;
+	}
+	var startColorCode = String.fromCharCode(0x1B, 0x5B)+"1;36;40m";
+	var resetColorCode = String.fromCharCode(0x1B, 0x5B)+"0m";
+	return startColorCode + "<"+ whichUnit.getName() +": "+ whichUnit.hp +"/"+ whichUnit.maxhp +" HP ##/## AP"+ "" +">" + resetColorCode;
 }
 
 Controller.handle_btn_newPony = function ()
@@ -58,7 +64,6 @@ Controller.waitHours = function (hours)
 	time.waitHours(hours);
 	time.displayTime();
 	Controller.selectedSettlement.DisplayLocation();
-	Utilities.Write();
 	Controller.selectedUnit.getReports();
 };
 

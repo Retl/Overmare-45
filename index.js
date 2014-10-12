@@ -57,7 +57,19 @@ console.log(Controller.selectedSettlement);
 var server = net.createServer(function (socket) {
   socket.write(displayThisString + '\r\n'.red);
   
-  socket.on('data', function(data) {
+  //socket.on('data', handleData);
+  
+  //socket.pipe(socket);
+});
+
+server.on('connection', function(socket) 
+  {
+	console.log("New user connected to server: " + socket.address().address +':'+ socket.address().port);
+	socket.pc = new Unit();
+	console.log("User assigned generated character: " + socket.pc.getName());
+	
+	socket.on('data', function(data) 
+{
   var msg = data.toString().trim();
   omg = msg;
   console.log(msg);
@@ -69,10 +81,44 @@ var server = net.createServer(function (socket) {
   if (msg.toUpperCase() == "look".toUpperCase()) 
   {
 	socket.write(Controller.selectedSettlement.ToString());
-	socket.write(Controller.selectedUnit.ToString());
-	socket.write(Controller.selectedUnit.getReports());
-	socket.write("Statusline.");
-	//socket.write(Controller.getStatusBar());
+	socket.write(socket.pc.ToString());
+	socket.write(socket.pc.getReports());
+	//socket.write("Statusline.");
+	socket.write(Controller.getStatusBar(socket.pc));
+  }
+  else if (msg.toUpperCase() == "color".toUpperCase()) 
+  {
+	var csi_start = String.fromCharCode(0x1B, 0x5B);
+	var csi_mid = '36;43;1';
+	var extra = "I AM THE TEXT."
+	var csi_end = 'm'
+	var csiString = csi_start + csi_mid + csi_end + extra;
+	console.log(csiString);
+	socket.write(csiString + String.fromCharCode(0x1B, 0x5B)+"0m");
+	console.log(String.fromCharCode(0x1B, 0x5B)+"0;39;49m");
+	//Using this stuff, we could make a healtbar by dividing maxhp by hp and rounding to find what portion of character sout of a string length we'd need to fill, then for each of those characters of the string as the print, chunk/slice them and have the colored background for the first part, and the reset background for the remaining portion.
+	//Also, the extended colorset 256 color version: console.log(String.fromCharCode(0x1B, 0x5B)+"2;r;g;b");
+  }
+  else if (msg.split(' ').length == 4 && msg.split(' ')[0].toUpperCase() == "rgb".toUpperCase()) 
+  {
+	m = msg.split(' ');
+	var csi_start = String.fromCharCode(0x1B, 0x5B);
+	var r = Utilities.clamp(m[1], 0, 255);
+	var g = Utilities.clamp(m[2], 0, 255);
+	var b = Utilities.clamp(m[3], 0, 255);
+	var csi_mid = '48;2;'+ r +';'+ g +';'+ b;
+	var csi_mid = '48;2;255;0;0';
+	var csi_end = 'm';
+	
+	var extra = "Here's what this color looks like.";
+	
+	var csiString = csi_start + csi_mid + csi_end + extra;
+	console.log(csiString);
+	socket.write(csiString + String.fromCharCode(0x1B, 0x5B)+"0m");
+	console.log(String.fromCharCode(0x1B, 0x5B)+"0;39;49m");
+	rgbresult = Utilities.HexToRGB('#ff9f00');
+	console.log("Just testing the hex to rgb thing without coloring with it. #ff9f00 = rgb("+ rgbresult.r +','+ rgbresult.g +','+ rgbresult.b+")");
+	//asd = String.fromCharCode(0x1B, 0x5B)+'48;5;'+'200'+'m'
   }
   else if (msg.toUpperCase() == "fast".toUpperCase()) 
   {
@@ -84,10 +130,72 @@ var server = net.createServer(function (socket) {
 	Controller.levelup();
 	socket.write(selectedUnit.ToString());
   }
-  
-  });
-  
-  //socket.pipe(socket);
 });
+  }
+);
 
 server.listen(8789, '127.0.0.1');
+
+handleData = function(data) 
+{
+  var msg = data.toString().trim();
+  omg = msg;
+  console.log(msg);
+  if (msg == "quit") 
+  {
+	socket.write("SERVER SHUTTING DOWN NOW!"); server.end;
+	process.exit();
+  }
+  if (msg.toUpperCase() == "look".toUpperCase()) 
+  {
+	socket.write(Controller.selectedSettlement.ToString());
+	socket.write(Controller.socket.pc.ToString());
+	socket.write(Controller.socket.pc.getReports());
+	//socket.write("Statusline.");
+	socket.write(Controller.getStatusBar());
+  }
+  else if (msg.toUpperCase() == "color".toUpperCase()) 
+  {
+	var csi_start = String.fromCharCode(0x1B, 0x5B);
+	var csi_mid = '36;43;1';
+	var extra = "I AM THE TEXT."
+	var csi_end = 'm'
+	var csiString = csi_start + csi_mid + csi_end + extra;
+	console.log(csiString);
+	socket.write(csiString + String.fromCharCode(0x1B, 0x5B)+"0m");
+	console.log(String.fromCharCode(0x1B, 0x5B)+"0;39;49m");
+	//Using this stuff, we could make a healtbar by dividing maxhp by hp and rounding to find what portion of character sout of a string length we'd need to fill, then for each of those characters of the string as the print, chunk/slice them and have the colored background for the first part, and the reset background for the remaining portion.
+	//Also, the extended colorset 256 color version: console.log(String.fromCharCode(0x1B, 0x5B)+"2;r;g;b");
+  }
+  else if (msg.split(' ').length == 4 && msg.split(' ')[0].toUpperCase() == "rgb".toUpperCase()) 
+  {
+	m = msg.split(' ');
+	var csi_start = String.fromCharCode(0x1B, 0x5B);
+	var r = Utilities.clamp(m[1], 0, 255);
+	var g = Utilities.clamp(m[2], 0, 255);
+	var b = Utilities.clamp(m[3], 0, 255);
+	var csi_mid = '48;2;'+ r +';'+ g +';'+ b;
+	var csi_mid = '48;2;255;0;0';
+	var csi_end = 'm';
+	
+	var extra = "Here's what this color looks like.";
+	
+	var csiString = csi_start + csi_mid + csi_end + extra;
+	console.log(csiString);
+	socket.write(csiString + String.fromCharCode(0x1B, 0x5B)+"0m");
+	console.log(String.fromCharCode(0x1B, 0x5B)+"0;39;49m");
+	rgbresult = Utilities.HexToRGB('#ff9f00');
+	console.log("Just testing the hex to rgb thing without coloring with it. #ff9f00 = rgb("+ rgbresult.r +','+ rgbresult.g +','+ rgbresult.b+")");
+	//asd = String.fromCharCode(0x1B, 0x5B)+'48;5;'+'200'+'m'
+  }
+  else if (msg.toUpperCase() == "fast".toUpperCase()) 
+  {
+	Controller.setTimescale(.5);
+	socket.write(selectedUnit.ToString());
+  }
+  else if (msg.toUpperCase() == "levelup".toUpperCase()) 
+  {
+	Controller.levelup();
+	socket.write(selectedUnit.ToString());
+  }
+};

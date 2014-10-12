@@ -204,6 +204,30 @@ Utilities.copyToClipboard = function (text) //Based on a snippet from http://sta
 {
   return window.prompt("Copy to clipboard: Ctrl+C, Enter", text);
 };
+
+//START OF: Color methods
+Utilities.HexToRGB = function (hexstr)
+{
+	//Find the first six-
+	var h = hexstr.match(/[0-9A-F]{6}/gi);
+	r = g = b = 00;
+	if (hexstr.length > 0)
+	{
+		r = parseInt('0x' + h[0].slice(0,2));
+		g = parseInt('0x' + h[0].slice(2,4));
+		b = parseInt('0x' + h[0].slice(4,6));
+		
+		r = Utilities.clamp(r, 0, 255);
+		g = Utilities.clamp(g, 0, 255);
+		b = Utilities.clamp(b, 0, 255);
+	}
+	else
+	{
+		console.log("Warning: Couldn't find the proper rgb color values from the given string. Defaulting to 000000.");
+	}
+	return {'r': r, 'g': g, 'b': b};
+};
+//END OF: Color methods.
 /* 
 //START OF: Saving and Loading Utility Methods.
 Utilities.save = function () //Based on a snippet from http://stackoverflow.com/questions/400212/how-to-copy-to-the-clipboard-in-javascript to get around the unsafe copy.
