@@ -154,7 +154,7 @@ var Unit = function () {
 		var amount = 0;
 		while (totalSpecial != 40)
 			{
-				which = Utilities.RandomIntInRange(0,spcl.length);
+				which = Utilities.RandomIntInRange(0,spcl.length - 1);
 				if (totalSpecial > 40)
 				{
 					amount = -1;
@@ -478,7 +478,7 @@ var Unit = function () {
 			//If they aren't, put the points into prefskills. Otherwise, put the points wherever available.
 			if (usePrefs)
 			{
-				which = Utilities.RandomInArray(this.prefSkills); //This just gets the index. We need to find the corresponding element index in the skill list.
+				which = Utilities.RandomIntInRange(0,this.prefSkills.length - 1); //This just gets the index. We need to find the corresponding element index in the skill list.
 				//which = this.skillList.indexOf(this.prefSkills[which]);
 				
 				//Look for another skill with the same name. If there is one, pick it. If not, give -1.
@@ -486,7 +486,7 @@ var Unit = function () {
 				for (var j = 0; j < this.skillList.length; j++)
 				{
 					//TESTING
-					console.log("Utilities.isDefined(this.skillList[j]) && this.skillList[j].myName == this.prefSkills[which].myName" + this.skillList[j].myName + " | " + this.prefSkills[which].myName);
+					//console.log("Utilities.isDefined(this.skillList[j]) && this.skillList[j].myName == this.prefSkills[which].myName" + this.skillList[j].myName + " | " + this.prefSkills[which].myName);
 					if (Utilities.isDefined(this.skillList[j]) && this.skillList[j].myName == this.prefSkills[which].myName)
 					{
 						which = j;

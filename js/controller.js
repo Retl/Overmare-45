@@ -18,9 +18,13 @@ Controller.handle_btn_examine = function ()
 	 selectedUnit.getReports();
 }
 
-Controller.levelup = function ()
+Controller.levelup = function (sel)
 {
-	Controller.selectedUnit.levelUp();
+	if (!Utilities.isDefined(sel))
+	{
+		sel = Controller.selectedUnit;
+	}
+	sel.levelUp();
 }
 
 Controller.getStatusBar = function (whichUnit)
@@ -32,6 +36,12 @@ Controller.getStatusBar = function (whichUnit)
 	var startColorCode = String.fromCharCode(0x1B, 0x5B)+"1;36;40m";
 	var resetColorCode = String.fromCharCode(0x1B, 0x5B)+"0m";
 	return startColorCode + "<"+ whichUnit.getName() +": "+ whichUnit.hp +"/"+ whichUnit.maxhp +" HP ##/## AP"+ "" +">" + resetColorCode;
+}
+
+Controller.sendToAll = function (msg)
+{
+	for (var con in Controller.connections) {Controller.connections[con].write(msg + '\n');}
+	//for (var i=0; i < Controller.connections.length; i++) {console.log(Controller.connections[i]);}
 }
 
 Controller.handle_btn_newPony = function ()
@@ -62,7 +72,8 @@ Controller.waitHours = function (hours)
 {
 	//Advances the time and then reports how much time has passed. - Moore.
 	time.waitHours(hours);
-	time.displayTime();
+	Controller.sendToAll(time.displayTime());
+	//We should probably have each socket's character use it's getReports and send it to its host, but they currently don't have a reference to their own host...
 	Controller.selectedSettlement.DisplayLocation();
 	Controller.selectedUnit.getReports();
 };

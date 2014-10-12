@@ -16,10 +16,10 @@ exports.GameTime = function ()
 		while (numHours > 0)
 		{
 			date.setHours(date.getHours() + 1);
-			if (typeof selectedSettlement != "undefined") 
+			if (typeof Controller.selectedSettlement != "undefined") 
 			{
-				selectedSettlement.hourly();
-				if (typeof selectedUnit != "undefined" && !selectedSettlement.IsHomeOf(selectedUnit)) 
+				Controller.selectedSettlement.hourly();
+				if (typeof selectedUnit != "undefined" && !Controller.selectedSettlement.IsHomeOf(selectedUnit)) 
 				{
 					selectedUnit.hourly();
 				}
@@ -51,7 +51,9 @@ exports.GameTime = function ()
 	
 	this.displayTime = function()
 	{
-		Utilities.WriteNoLine("Day " + date.getDay() + " - TIME approximately " + this.timeTo12Hour(date.getHours()));
+		var result = "Day " + date.getDay() + " - TIME approximately " + this.timeTo12Hour(date.getHours());
+		Utilities.WriteNoLine(result);
+		return result;
 	};
 	
 };
