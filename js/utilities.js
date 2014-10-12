@@ -115,6 +115,7 @@ Utilities.RandomIntInRange = function(min, max)
 
 Utilities.RandomInArray = function(a, b)
 {
+	//Careful with this thing. It returns a copy of a value from the array as an array just containing that thing. DO NOT USE THIS IF YOU JUST NEED AN INDEX.
 	var c;
 	var result = [];
 	

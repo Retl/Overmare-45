@@ -154,7 +154,7 @@ var Unit = function () {
 		var amount = 0;
 		while (totalSpecial != 40)
 			{
-				which = Utilities.RandomInArray(spcl);
+				which = Utilities.RandomIntInRange(0,spcl.length);
 				if (totalSpecial > 40)
 				{
 					amount = -1;
