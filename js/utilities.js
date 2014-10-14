@@ -189,7 +189,7 @@ Utilities.clamp = function (val, min, max)
 	return val;
 };
 
-Utilities.IsNumber = function (input)
+Utilities.isNumber = function (input)
 {
 	//Check the input to see if AT LEAST the first character is a digit. If it is, true. If this isn't a number, return false.
 	return !isNaN( parseFloat(input) );

@@ -25,6 +25,7 @@ var Unit = function () {
 	
 	//Stats used for identification, growth, breeding, etc.
 	this.myName = Namer.makeName(2, mlpfimNames, foevanillanames, foegeneralnames, foepinkeyesnames);
+	this.isNPC = true;
 	temp = [SexEnum.MALE, SexEnum.FEMALE, SexEnum.OTHER];
 	this.sex = temp[Utilities.RandomIntInRange(0, temp.length - 1)];
 	this.age = Utilities.RandomIntInRange(10, 30); //Days, not years. Might want to have a separate display for years, though. | Actually, consider generating a DoB instead, and dynamically figure out the age based on the gameTime.
@@ -503,7 +504,7 @@ var Unit = function () {
 			
 			else
 			{
-				which = Utilities.RandomInArray(this.skillList);
+				which = Utilities.RandomIntInRange(0,this.skillList.length - 1);
 			}
 			
 			if (which != -1 && !this.skillList[which].isMaxed())
