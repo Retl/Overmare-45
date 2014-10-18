@@ -2,6 +2,7 @@
 omg = "";
 var net = require('net');
 var colors = require('colors');
+var bcrypt = require('bcryptjs');
 
 //My own stuffs.
 GameTime = require('./js/gameTime.js').GameTime;
@@ -15,6 +16,7 @@ foegeneralnames = require('./js/dict_FoEGeneralNames.js').foegeneralnames;
 foepinkeyesnames = require('./js/dict_FoEPinkEyesNames.js').foepinkeyesnames;
 Namer = require('./js/namer.js').Namer;
 
+Item = require('./js/item.js');
 Inventory = require('./js/inventory.js').Inventory;
 Skill = require('./js/skill.js').Skill;
 Perk = require('./js/perk.js').Perk;
@@ -29,7 +31,7 @@ Controller.connections = [];
 
 // var displayThisString = "You can make up ponies and put them in places to live! \nNote: Each dictionary does a different thing. Consider using the name generator with only one dictionary toggled.\nMLPFiM Names consist of canon and fanon character names based on the wiki.\nFoE Shared Universe dictionary consists of character names from FoE Sidefics all mixed up.\nThe Fallout: Equestria dictionary and Pink Eyes dictionary are most of the words from those stories (with some removals).";
 
-var displayThisString = "MOTD: Just trying to test to see if the chat functions and whatnot work properly.\nYou can talk to any other connected users with 'say <stuff you wanna say>'. You can view your stats with 'look'.\n Other commands that should work now are: levelup, color, fast, slow, quit.\n";
+var displayThisString = "MOTD: Just trying to test to see if the chat functions and whatnot work properly.\nYou can talk to any other connected users with 'say <stuff you wanna say>'. You can view your stats with 'score' or 'hoof'.\n Other commands that should work now are: levelup, color, fast, slow, quit.\n";
 
 var save = null;
 time = new GameTime();
@@ -54,19 +56,17 @@ Utilities.load(); //TODO: Consider not adding the defaults if there's data to lo
 
 exports = this;
 
-console.log(displayThisString.green);
-console.log(testSettlement);
-console.log(Controller.selectedSettlement);
+console.log(displayThisString);
+//console.log(testSettlement);
+//console.log(Controller.selectedSettlement);
 //console.log(test);
 //console.log(time);
 
 //Based on a tutorial:
 var server = net.createServer(function (socket) {
   //socket.write(displayThisString + '\r\n'.red);
-  
-  //socket.on('data', handleData);
-  
-  //socket.pipe(socket);
+  socket.write("Server is now live on: " + socket.address().address +':'+ socket.address().port);
+  console.log("Server is now live on: " + socket.address().address +':'+ socket.address().port);
 });
 
 server.on('connection', function(socket) 
@@ -79,6 +79,8 @@ server.on('connection', function(socket)
   
 	console.log("New user connected to server: " + socket.address().address +':'+ socket.address().port);
 	socket.pc = new Unit();
+	socket.pc.isNPC = false;
+	socket.pass = '';
 	Controller.selectedSettlement.addResident(socket.pc);
 	console.log("User assigned generated character: " + socket.pc.getName());
 	
@@ -93,163 +95,130 @@ server.on('connection', function(socket)
 	);
 	
 	socket.on('data', function(data) 
-{
-  var msg = data.toString().trim();
-  omg = msg;
-  console.log(msg);
-  if (msg == "quit") 
-  {
-	//socket.write("SERVER SHUTTING DOWN NOW!"); server.end;
-	socket.end();
-	//process.exit();
-  }
-  if (msg.toUpperCase() == "look".toUpperCase()) 
-  {
-	socket.write(Controller.selectedSettlement.ToString());
-	socket.write(socket.pc.ToString());
-	socket.write(socket.pc.getReports());
-	//socket.write("Statusline.");
-	socket.write(Controller.getStatusBar(socket.pc) + '\n');
-  }
-  else if (msg.split(' ').length >= 2 && msg.split(' ')[0].toUpperCase() == "name".toUpperCase()) 
-  {
-	var m = msg.split(' ');
-	var strRest = m.slice(1).join(' ');
-	var outMsg = "";
-	outMsg += String.fromCharCode(0x1B, 0x5B)+"36m";
-	outMsg += socket.pc.getName()+ " is now known as " + strRest + '.';
-	socket.pc.myName = strRest;
-	outMsg += String.fromCharCode(0x1B, 0x5B)+"0;39;49m";
-	Controller.sendToAll(outMsg);
-	console.log(outMsg);
-  }
-  else if (msg.split(' ').length >= 2 && msg.split(' ')[0].toUpperCase() == "say".toUpperCase()) 
-  {
-	var m = msg.split(' ');
-	var strRest = m.slice(1).join(' ');
-	var outMsg = "";
-	outMsg += String.fromCharCode(0x1B, 0x5B)+"36m";
-	outMsg += socket.pc.getName() + ' says, "' + strRest + '"';
-	outMsg += String.fromCharCode(0x1B, 0x5B)+"0;39;49m";
-	Controller.sendToAll(outMsg);
-	console.log(outMsg);
-  }
-  else if (msg.toUpperCase() == "color".toUpperCase()) 
-  {
-	var csi_start = String.fromCharCode(0x1B, 0x5B);
-	var csi_mid = '36;43;1';
-	var extra = "I AM THE TEXT."
-	var csi_end = 'm'
-	var csiString = csi_start + csi_mid + csi_end + extra;
-	console.log(csiString);
-	socket.write(csiString + String.fromCharCode(0x1B, 0x5B)+"0m");
-	console.log(String.fromCharCode(0x1B, 0x5B)+"0;39;49m");
-	//Using this stuff, we could make a healtbar by dividing maxhp by hp and rounding to find what portion of character sout of a string length we'd need to fill, then for each of those characters of the string as the print, chunk/slice them and have the colored background for the first part, and the reset background for the remaining portion.
-	//Also, the extended colorset 256 color version: console.log(String.fromCharCode(0x1B, 0x5B)+"2;r;g;b");
-  }
-  else if (msg.split(' ').length == 4 && msg.split(' ')[0].toUpperCase() == "rgb".toUpperCase()) 
-  {
-	m = msg.split(' ');
-	var csi_start = String.fromCharCode(0x1B, 0x5B);
-	var r = Utilities.clamp(m[1], 0, 255);
-	var g = Utilities.clamp(m[2], 0, 255);
-	var b = Utilities.clamp(m[3], 0, 255);
-	var csi_mid = '48;2;'+ r +';'+ g +';'+ b;
-	var csi_mid = '48;2;255;0;0';
-	var csi_end = 'm';
-	
-	var extra = "Here's what this color looks like.";
-	
-	var csiString = csi_start + csi_mid + csi_end + extra;
-	console.log(csiString);
-	socket.write(csiString + String.fromCharCode(0x1B, 0x5B)+"0m");
-	console.log(String.fromCharCode(0x1B, 0x5B)+"0;39;49m");
-	rgbresult = Utilities.HexToRGB('#ff9f00');
-	console.log("Just testing the hex to rgb thing without coloring with it. #ff9f00 = rgb("+ rgbresult.r +','+ rgbresult.g +','+ rgbresult.b+")");
-	//asd = String.fromCharCode(0x1B, 0x5B)+'48;5;'+'200'+'m'
-  }
-  else if (msg.toUpperCase() == "fast".toUpperCase()) 
-  {
-	Controller.setTimescale(.5);
-	Controller.sendToAll("Timescale: One hour per real half-second.");
-  }
-  else if (msg.toUpperCase() == "slow".toUpperCase()) 
-  {
-	Controller.setTimescale(60);
-	Controller.sendToAll("Timescale: One hour per real minute.");
-  }
-  else if (msg.toUpperCase() == "levelup".toUpperCase()) 
-  {
-	Controller.levelup(socket.pc);
-	socket.write(socket.pc.ToString());
-  }
-});
+	{
+	  var msg = data.toString().trim();
+	  omg = msg;
+	  //console.log(msg); - This is nice for debugging and whatnot, but when running this for deployment, this would be a nasty security issue.
+	  if (msg == "quit") 
+	  {
+		//socket.write("SERVER SHUTTING DOWN NOW!"); server.end;
+		socket.end();
+		//process.exit();
+	  }
+	  if (msg.toUpperCase() == "score".toUpperCase() || msg.toUpperCase() == "hoof".toUpperCase() ) 
+	  {
+		socket.write(Controller.selectedSettlement.ToString());
+		socket.write(socket.pc.ToString());
+		socket.write(socket.pc.getReports());
+		//socket.write("Statusline.");
+		socket.write(Controller.getStatusBar(socket.pc) + '\n');
+	  }
+	  else if (msg.split(' ').length >= 2 && msg.split(' ')[0].toUpperCase() == "name".toUpperCase()) 
+	  {
+		var m = msg.split(' ');
+		var strRest = m.slice(1).join(' ');
+		var outMsg = "";
+		outMsg += String.fromCharCode(0x1B, 0x5B)+"36m";
+		outMsg += socket.pc.getName()+ " is now known as " + strRest + '.';
+		socket.pc.myName = strRest;
+		outMsg += String.fromCharCode(0x1B, 0x5B)+"0;39;49m";
+		Controller.sendToAll(outMsg);
+		console.log(outMsg);
+	  }
+	  else if (msg.split(' ').length >= 2 && msg.split(' ')[0].toUpperCase() == "say".toUpperCase()) 
+	  {
+		var m = msg.split(' ');
+		var strRest = m.slice(1).join(' ');
+		var outMsg = "";
+		outMsg += String.fromCharCode(0x1B, 0x5B)+"36m";
+		outMsg += socket.pc.getName() + ' says, "' + strRest + '"';
+		outMsg += String.fromCharCode(0x1B, 0x5B)+"0;39;49m";
+		Controller.sendToAll(outMsg);
+		console.log(outMsg);
+	  }
+	  else if (msg.toUpperCase() == "color".toUpperCase()) 
+	  {
+		var csi_start = String.fromCharCode(0x1B, 0x5B);
+		var csi_mid = '36;43;1';
+		var extra = "I AM THE TEXT."
+		var csi_end = 'm'
+		var csiString = csi_start + csi_mid + csi_end + extra;
+		console.log(csiString);
+		socket.write(csiString + String.fromCharCode(0x1B, 0x5B)+"0m");
+		console.log(String.fromCharCode(0x1B, 0x5B)+"0;39;49m");
+		//Using this stuff, we could make a healtbar by dividing maxhp by hp and rounding to find what portion of character sout of a string length we'd need to fill, then for each of those characters of the string as the print, chunk/slice them and have the colored background for the first part, and the reset background for the remaining portion.
+		//Also, the extended colorset 256 color version: console.log(String.fromCharCode(0x1B, 0x5B)+"2;r;g;b");
+	  }
+	  else if (msg.split(' ').length == 4 && msg.split(' ')[0].toUpperCase() == "rgb".toUpperCase()) 
+	  {
+		m = msg.split(' ');
+		var csi_start = String.fromCharCode(0x1B, 0x5B);
+		var r = Utilities.clamp(m[1], 0, 255);
+		var g = Utilities.clamp(m[2], 0, 255);
+		var b = Utilities.clamp(m[3], 0, 255);
+		var csi_mid = '48;2;'+ r +';'+ g +';'+ b;
+		var csi_mid = '48;2;255;0;0';
+		var csi_end = 'm';
+		
+		var extra = "Here's what this color looks like.";
+		
+		var csiString = csi_start + csi_mid + csi_end + extra;
+		console.log(csiString);
+		socket.write(csiString + String.fromCharCode(0x1B, 0x5B)+"0m");
+		console.log(String.fromCharCode(0x1B, 0x5B)+"0;39;49m");
+		rgbresult = Utilities.HexToRGB('#ff9f00');
+		console.log("Just testing the hex to rgb thing without coloring with it. #ff9f00 = rgb("+ rgbresult.r +','+ rgbresult.g +','+ rgbresult.b+")");
+		//asd = String.fromCharCode(0x1B, 0x5B)+'48;5;'+'200'+'m'
+	  }
+	  else if (msg.toUpperCase() == "fast".toUpperCase()) 
+	  {
+		Controller.setTimescale(.5);
+		Controller.sendToAll("Timescale: One hour per real half-second.");
+	  }
+	  else if (msg.toUpperCase() == "slow".toUpperCase()) 
+	  {
+		Controller.setTimescale(60);
+		Controller.sendToAll("Timescale: One hour per real minute.");
+	  }
+	  else if (msg.toUpperCase() == "levelup".toUpperCase()) 
+	  {
+		Controller.levelup(socket.pc);
+		socket.write(socket.pc.ToString());
+	  }
+	  else if (msg.split(' ').length >= 2 && msg.split(' ')[0].toUpperCase() == "setpass".toUpperCase()) 
+	  {
+		var m = msg.split(' ');
+		var strRest = m.slice(1).join(' ');
+		var outMsg = "";
+		bcrypt.hash(strRest, 10, function (e, r) {
+				socket.pass = r;
+				//socket.write("Password set to: " + socket.pass);
+				socket.write("Password set.");
+			}
+		);
+		socket.write(socket.pc.ToString());
+	  }
+	  else if (msg.split(' ').length >= 2 && msg.split(' ')[0].toUpperCase() == "connect".toUpperCase()) 
+	  {
+		var m = msg.split(' ');
+		var strRest = m.slice(1).join(' ');
+		var outMsg = "";
+		bcrypt.compare(strRest, socket.pass, function (e, r) {
+				if (true == r) { outMsg = "Password match!";}
+				else {outMsg = "Authentification failure. (Did you forget CAPSLOCK?)";}
+				socket.write(outMsg);
+			}
+		);
+		
+	  }
+	});
   }
 );
 
-server.listen(8789);
+//Prevents the server from being killed by ECONNRESET
+process.on('uncaughtException', function (err) {
+  console.error(err.stack);
+  console.log("Node NOT Exiting...");
+});
 
-handleData = function(data) 
-{
-  var msg = data.toString().trim();
-  omg = msg;
-  console.log(msg);
-  if (msg == "quit") 
-  {
-	//socket.write("SERVER SHUTTING DOWN NOW!"); server.end;
-	socket.end();
-	//process.exit();
-  }
-  if (msg.toUpperCase() == "look".toUpperCase()) 
-  {
-	socket.write(Controller.selectedSettlement.ToString());
-	socket.write(Controller.socket.pc.ToString());
-	socket.write(Controller.socket.pc.getReports());
-	//socket.write("Statusline.");
-	socket.write(Controller.getStatusBar());
-  }
-  else if (msg.toUpperCase() == "color".toUpperCase()) 
-  {
-	var csi_start = String.fromCharCode(0x1B, 0x5B);
-	var csi_mid = '36;43;1';
-	var extra = "I AM THE TEXT."
-	var csi_end = 'm'
-	var csiString = csi_start + csi_mid + csi_end + extra;
-	console.log(csiString);
-	socket.write(csiString + String.fromCharCode(0x1B, 0x5B)+"0m");
-	console.log(String.fromCharCode(0x1B, 0x5B)+"0;39;49m");
-	//Using this stuff, we could make a healtbar by dividing maxhp by hp and rounding to find what portion of character sout of a string length we'd need to fill, then for each of those characters of the string as the print, chunk/slice them and have the colored background for the first part, and the reset background for the remaining portion.
-	//Also, the extended colorset 256 color version: console.log(String.fromCharCode(0x1B, 0x5B)+"2;r;g;b");
-  }
-  else if (msg.split(' ').length == 4 && msg.split(' ')[0].toUpperCase() == "rgb".toUpperCase()) 
-  {
-	m = msg.split(' ');
-	var csi_start = String.fromCharCode(0x1B, 0x5B);
-	var r = Utilities.clamp(m[1], 0, 255);
-	var g = Utilities.clamp(m[2], 0, 255);
-	var b = Utilities.clamp(m[3], 0, 255);
-	var csi_mid = '48;2;'+ r +';'+ g +';'+ b;
-	var csi_mid = '48;2;255;0;0';
-	var csi_end = 'm';
-	
-	var extra = "Here's what this color looks like.";
-	
-	var csiString = csi_start + csi_mid + csi_end + extra;
-	console.log(csiString);
-	socket.write(csiString + String.fromCharCode(0x1B, 0x5B)+"0m");
-	console.log(String.fromCharCode(0x1B, 0x5B)+"0;39;49m");
-	rgbresult = Utilities.HexToRGB('#ff9f00');
-	console.log("Just testing the hex to rgb thing without coloring with it. #ff9f00 = rgb("+ rgbresult.r +','+ rgbresult.g +','+ rgbresult.b+")");
-	//asd = String.fromCharCode(0x1B, 0x5B)+'48;5;'+'200'+'m'
-  }
-  else if (msg.toUpperCase() == "fast".toUpperCase()) 
-  {
-	Controller.setTimescale(.5);
-	socket.write(selectedUnit.ToString());
-  }
-  else if (msg.toUpperCase() == "levelup".toUpperCase()) 
-  {
-	Controller.levelup();
-	socket.write(selectedUnit.ToString());
-  }
-};
+server.listen(8789);

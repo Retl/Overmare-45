@@ -1,0 +1,6 @@
+var ParsedMessage = function (str, sock) {
+	this.args = str.split(" ");
+	this.cmd = this.args[0];
+	this.rest = this.args.slice(1).join(' ');
+	
+}

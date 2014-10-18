@@ -129,7 +129,7 @@ Utilities.RandomInArray = function(a, b)
 		c = a.slice();
 	}
 	
-	if (!Utilities.IsNumber(b))
+	if (!Utilities.isNumber(b))
 	{
 		b = 1;
 	}

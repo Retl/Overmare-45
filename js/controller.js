@@ -223,4 +223,16 @@ Controller.handle_btn_delete_save = function ()
 }
 //END OF: Save/Load Handlers
 
+Controller.thingy = function (name)
+{
+	var result = "";
+	
+	var separatorBar = "******************************************************************************";
+	for (var i = (separatorBar.length / 2) - 2 - name.length; i > 0; i--) {e += " ";}
+	result = separatorBar + '\n' + name + '\n' + separatorBar;
+	
+	console.log(result);
+	return result;
+}
+
 exports.Controller = Controller;
