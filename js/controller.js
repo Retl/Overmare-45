@@ -83,7 +83,7 @@ Controller.setTimescale = function (newTime)
 	var oneSec = 1000;
 	//var newTime = prompt('Enter the time between turns (in seconds).', 60);
 	 
-	if (Utilities.IsNumber(newTime)) //If a valid number was entered, do use that as the time.
+	if (Utilities.isNumber(newTime)) //If a valid number was entered, do use that as the time.
 	{
 		newTime = Math.abs(newTime);
 		clearInterval(Controller.gameTimeInterval);

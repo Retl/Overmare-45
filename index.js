@@ -125,13 +125,24 @@ server.on('connection', function(socket)
 		Controller.sendToAll(outMsg);
 		console.log(outMsg);
 	  }
-	  else if (msg.split(' ').length >= 2 && msg.split(' ')[0].toUpperCase() == "say".toUpperCase()) 
+	  else if (msg.split(' ').length >= 2 && (msg.split(' ')[0].toUpperCase() == "say".toUpperCase() || msg.split(' ')[0] == '"')) 
 	  {
 		var m = msg.split(' ');
 		var strRest = m.slice(1).join(' ');
 		var outMsg = "";
 		outMsg += String.fromCharCode(0x1B, 0x5B)+"36m";
 		outMsg += socket.pc.getName() + ' says, "' + strRest + '"';
+		outMsg += String.fromCharCode(0x1B, 0x5B)+"0;39;49m";
+		Controller.sendToAll(outMsg);
+		console.log(outMsg);
+	  }
+	  else if (msg.split(' ').length >= 2 && (msg.split(' ')[0].toUpperCase() == "pose".toUpperCase() || msg.split(' ')[0] == ',')) 
+	  {
+		var m = msg.split(' ');
+		var strRest = m.slice(1).join(' ');
+		var outMsg = "";
+		outMsg += String.fromCharCode(0x1B, 0x5B)+"36m";
+		outMsg += socket.pc.getName() + ' ' + strRest;
 		outMsg += String.fromCharCode(0x1B, 0x5B)+"0;39;49m";
 		Controller.sendToAll(outMsg);
 		console.log(outMsg);
