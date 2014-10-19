@@ -3,6 +3,8 @@ var Controller =
 	useMadModdRules:false
 };
 
+Controller.allCharacters = [];
+
 Controller.toggleMadModd = function () 
 {
 	Controller.useMadModdRules = !Controller.useMadModdRules;

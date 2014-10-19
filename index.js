@@ -42,6 +42,7 @@ Controller.gameTimeInterval = setInterval(Main.mainIntervalCallback, 60 * 1000);
 test = new Unit();
 var selectedUnit = test;
 Controller.selectedUnit = selectedUnit;
+Controller.allCharacters[selectedUnit.getName()] = selectedUnit; //Puts the character into the list of all characters at the index equivalent to its name.
 
 testSettlement = new Settlement();
 var selectedSettlement = testSettlement;
@@ -65,8 +66,8 @@ console.log(displayThisString);
 //Based on a tutorial:
 var server = net.createServer(function (socket) {
   //socket.write(displayThisString + '\r\n'.red);
-  socket.write("Server is now live on: " + socket.address().address +':'+ socket.address().port);
-  console.log("Server is now live on: " + socket.address().address +':'+ socket.address().port);
+  //server.write("Server is now live on: " + socket.address().address +':'+ socket.address().port);
+  //console.log("Server is now live on: " + socket.address().address +':'+ socket.address().port);
 });
 
 server.on('connection', function(socket) 
@@ -82,10 +83,22 @@ server.on('connection', function(socket)
 	socket.pc.isNPC = false;
 	socket.pass = '';
 	Controller.selectedSettlement.addResident(socket.pc);
+	Controller.allCharacters[socket.pc.getName()] = socket.pc; //Puts the character into the list of all characters at the index equivalent to its name.
 	console.log("User assigned generated character: " + socket.pc.getName());
 	
 	socket.on('end', function()
 		{
+			//Finds the socket that is disconnecting and removes it from the connections list.
+			var outMsg = socket.pc.getName() + " has disconnected.";
+			Controller.connections.splice(Controller.connections.indexOf(socket),1);
+			Controller.sendToAll(outMsg);
+			console.log(outMsg);
+		}
+	);
+	
+	socket.on('error', function(err)
+		{
+			console.error(err.stack);
 			//Finds the socket that is disconnecting and removes it from the connections list.
 			var outMsg = socket.pc.getName() + " has disconnected.";
 			Controller.connections.splice(Controller.connections.indexOf(socket),1);
@@ -120,7 +133,11 @@ server.on('connection', function(socket)
 		var outMsg = "";
 		outMsg += String.fromCharCode(0x1B, 0x5B)+"36m";
 		outMsg += socket.pc.getName()+ " is now known as " + strRest + '.';
+		
+		delete Controller.allCharacters[socket.pc.getName()];
 		socket.pc.myName = strRest;
+		Controller.allCharacters[strRest] = socket.pc;
+		
 		outMsg += String.fromCharCode(0x1B, 0x5B)+"0;39;49m";
 		Controller.sendToAll(outMsg);
 		console.log(outMsg);
@@ -203,25 +220,54 @@ server.on('connection', function(socket)
 		var outMsg = "";
 		bcrypt.hash(strRest, 10, function (e, r) {
 				socket.pass = r;
+				socket.pc.pass = r;
 				//socket.write("Password set to: " + socket.pass);
 				socket.write("Password set.");
 			}
 		);
-		socket.write(socket.pc.ToString());
+		//socket.write(socket.pc.ToString());
 	  }
-	  else if (msg.split(' ').length >= 2 && msg.split(' ')[0].toUpperCase() == "connect".toUpperCase()) 
+	  else if (msg.split(' ').length >= 3 && msg.split(' ')[0].toUpperCase() == "connect".toUpperCase()) 
 	  {
 		var m = msg.split(' ');
-		var strRest = m.slice(1).join(' ');
+		var charName = m[1]; //Uh oh. Doing it this way, we don't know where the name ends and the pass begins. It assumes names will not have spaces though.
+		var strRest = m.slice(2).join(' ');
 		var outMsg = "";
 		bcrypt.compare(strRest, socket.pass, function (e, r) {
-				if (true == r) { outMsg = "Password match!";}
-				else {outMsg = "Authentification failure. (Did you forget CAPSLOCK?)";}
+				if (true == r) 
+				{ 
+					outMsg = "Password matches connection password!";
+				}
+				else {outMsg = "Authentication failure on this connection. (Did you forget CAPSLOCK?)";}
+				/*
+				for (var i = 0; i < Controller.allCharacters.length; i++)
+				{
+					if (Utilities.isDefined(Controller.allCharacters[i].pass) && Controller.allCharacters[i].pass == r)
+					{
+						socket.pc = Controller.allCharacters[i];
+					}
+					break;
+				}
+				*/
 				socket.write(outMsg);
-			}
-		);
+			});
+			
+			//Check the password against with this character name to see if there's a character with this pass. If so, switch to it.
+			bcrypt.compare(strRest, Controller.allCharacters[charName].pass, function (e, r) {
+				if (true == r) 
+				{ 
+					outMsg = "Password and Character Account Match. Welcome back, "+ charName +"!";
+					socket.pc = Controller.allCharacters[charName];
+				}
+				else {outMsg = "Authentication failure on thsio connection. (Did you forget CAPSLOCK?)";}
+				socket.write(outMsg);
+			});
 		
-	  }
+		}
+		else if (msg.trim() != '')
+		{
+			socket.write("Err, sorry. You want me to do WHAT to my WHERE?\n");
+		}
 	});
   }
 );
@@ -229,6 +275,10 @@ server.on('connection', function(socket)
 //Prevents the server from being killed by ECONNRESET
 process.on('uncaughtException', function (err) {
   console.error(err.stack);
+  if (socket)
+  {
+	
+  }
   console.log("Node NOT Exiting...");
 });
 
