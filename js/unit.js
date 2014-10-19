@@ -469,7 +469,7 @@ var Unit = function () {
 			for (i in this.prefSkills)
 			{
 				var pts = this.prefSkills[i].getTotal();
-				if (Utilities.IsNumber(pts))
+				if (Utilities.isNumber(pts))
 				{
 					if (pts < skillTarget) {usePrefs = true;}
 				}
